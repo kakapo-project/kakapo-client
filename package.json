@@ -2,6 +2,11 @@
   "name": "kakapo-client",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "node ./scripts/start.js",
+    "build": "node ./scripts/build.js",
+    "test": "node ./scripts/test.js"
+  },
   "dependencies": {
     "@babel/core": "7.1.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
@@ -75,14 +80,6 @@
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "3.6.2"
-  },
-  "scripts": {
-    "start-fe": "node client/scripts/start.js",
-    "start-be": "cargo run",
-    "build": "cargo build --release && node client/scripts/build.js",
-    "test-fe": "node client/scripts/test.js",
-    "test-be": "cargo test",
-    "test": "yarn test-fe && yarn test-be"
   },
   "eslintConfig": {
     "extends": "react-app"
