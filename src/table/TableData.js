@@ -31,7 +31,9 @@ import { connect } from 'react-redux'
 import { requestingTableData, addRow, deleteRow, modifyValue, copySelection } from '../actions'
 
 
+/*
 import { DataGrid, ContextMenu, NumberFormatter, DefaultFormatter } from '../data-grid/index.js';
+*/
 
 class TableData extends Component {
 
@@ -73,7 +75,8 @@ class TableData extends Component {
   }
 
   render() {
-
+    return <div>Nothing</div>
+    /*
     let columnInfo = this.props.columnInfo
     let columns = ['', ...this.props.columns].map((x, idx) => ({
       key: idx,
@@ -98,6 +101,7 @@ class TableData extends Component {
         onSelectionComplete={({topLeft, bottomRight}) => this.setState({topLeft, bottomRight})}
       />
     )
+    */
   }
 }
 

@@ -32,13 +32,14 @@ import { connect } from 'react-redux'
 
 import { requestingTableData, addRow, deleteRow, modifyValue } from '../actions'
 
-
+/*
 import { DataGrid, ContextMenu, NumberFormatter, DefaultFormatter } from '../data-grid/index.js';
+*/
 
 class QueryData extends Component {
 
   render() {
-
+    /*
     let columns = ['', ...this.props.columns].map((x, idx) => ({
       key: idx,
       name: x,
@@ -58,6 +59,8 @@ class QueryData extends Component {
         contextMenuProps={null}
       />
     )
+    */
+   return <div>Nothing</div>
   }
 }
 
