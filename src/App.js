@@ -1,12 +1,22 @@
 
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import Home from './Home'
 import Tables from './table/Tables'
 import Queries from './queries/Queries'
 import Scripts from './scripts/Scripts'
 import Login from './Login'
+
+const isUserLoggedIn = () => {
+  const jwt = localStorage.getItem('kakapoJWT')
+  if (jwt) {
+    //TODO: check jwt
+    return true
+  } else {
+    return true //TODO:...
+  }
+}
 
 class App extends Component {
   render() {
@@ -27,11 +37,17 @@ class App extends Component {
           `}
         </style>
         <Switch>
-          <Route exact path='/' component={Home}/>
-          <Route path='/login' component={Login}/>
+          <Route exact path='/' render={() => {
+            if (isUserLoggedIn()) {
+              return <Home />
+            } else {
+              return <Redirect to='/login' />
+            }
+          }} />
           <Route path='/tables/:name' component={Tables}/>
           <Route path='/queries/:name' component={Queries}/>
           <Route path='/scripts/:name' component={Scripts}/>
+          <Route path='/login' component={Login}/>
         </Switch>
       </main>
     )

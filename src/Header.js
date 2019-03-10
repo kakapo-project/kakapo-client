@@ -74,6 +74,7 @@ class Header extends Component {
                 onResultSelect={e => {}}
                 onSearchChange={e => {}}
               />
+            {/* TODO: if no sidebar, don't*/}
             <Menu.Item
               name='compress'
               onClick={(e, {name}) => this.props.clickToggleSidebar()}
@@ -82,6 +83,20 @@ class Header extends Component {
                 <Icon name='expand' /> :
                 <Icon name='compress' />
               }
+            </Menu.Item>
+
+            <Menu.Item
+              name='user'
+              onClick={(e, {name}) => {}}
+            >
+              <Icon name='user' />
+            </Menu.Item>
+            {/* TODO: if admin */}
+            <Menu.Item
+              name='settings'
+              onClick={(e, {name}) => {}}
+            >
+              <Icon name='settings' />
             </Menu.Item>
             <Menu.Item
               name='documentation'

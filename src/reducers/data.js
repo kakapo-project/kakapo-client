@@ -3,6 +3,7 @@ import { ACTIONS } from '../actions'
 
 const initialState = {
   error: null,
+  domains: [],
   tables: [],
   queries: [],
   script: [],
@@ -19,6 +20,11 @@ const entityCreator = (state = initialState, action) => {
       return {
         ...state,
         error: null,
+      }
+    case ACTIONS.SET_DOMAINS:
+      return {
+        ...state,
+        domains: action.domains,
       }
     case ACTIONS.SET_TABLE_DATA:
       return {

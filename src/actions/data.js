@@ -9,6 +9,33 @@ export const clearPullDataError = () => {
   }
 }
 
+export const pullDomains = () => {
+  return async (dispatch, getState) => {
+    fetch(`${API_URL}/manage/domains`)
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      let domains = data.map(x => ({
+        name: x.name,
+        type: x.type,
+        description: x.description,
+      }))
+
+      dispatch({
+        type: ACTIONS.SET_DOMAINS,
+        domains: domains,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: ACTIONS.PULL_DATA_ERROR,
+        msg: err.message,
+      })
+    })
+  }
+}
+
 export const pullData = () => {
   return async (dispatch, getState) => {
     //tables
@@ -41,7 +68,7 @@ export const pullData = () => {
       console.log('err: ', err.message)
       dispatch({
         type: ACTIONS.PULL_DATA_ERROR,
-        msg: err.message
+        msg: err.message,
       })
     })
 
@@ -74,7 +101,7 @@ export const pullData = () => {
       console.log('err: ', err.message)
       dispatch({
         type: ACTIONS.PULL_DATA_ERROR,
-        msg: err.message
+        msg: err.message,
       })
     })
 
@@ -107,7 +134,7 @@ export const pullData = () => {
       console.log('err: ', err.message)
       dispatch({
         type: ACTIONS.PULL_DATA_ERROR,
-        msg: err.message
+        msg: err.message,
       })
     })
   }

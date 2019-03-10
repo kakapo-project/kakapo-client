@@ -74,7 +74,7 @@ class Entities extends Component {
           { entities
               .filter( entity => selectedRenderEntities.includes(entity.type))
               .map( (entity, idx) =>
-            <Grid.Column key={idx}>
+            <Grid.Column key={entity.name}>
               <Card
                 link
                 as={Link}

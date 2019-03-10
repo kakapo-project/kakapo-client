@@ -22,7 +22,7 @@ class LoginForm extends Component {
               <Form size='large'>
                 <Segment style={{border: 0, boxShadow: '0px 0px 15px 0px rgba(10, 40, 30, 0.8)'}}>
                   <Header as='h2' color='grey' textAlign='center'>
-                    <Image src={logo} /> Log-in to your account
+                    <Image src={logo} /> Log in to Your Account
                   </Header>
                   <Form.Input fluid icon='user' iconPosition='left' placeholder='E-mail address' />
                   <Form.Input
@@ -36,9 +36,6 @@ class LoginForm extends Component {
                   <Button color='grey' fluid size='large'>
                     Login
                   </Button>
-                  <Message>
-                    New to us? <a href='#'>Sign Up</a>
-                  </Message>
                 </Segment>
               </Form>
             </Transition>
