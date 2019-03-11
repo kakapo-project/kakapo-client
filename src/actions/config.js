@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api'
+const API_URL = 'http://localhost:1845'
 const WS_URL = 'ws://localhost:8080/api/listen'
 
 

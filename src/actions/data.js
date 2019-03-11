@@ -11,7 +11,9 @@ export const clearPullDataError = () => {
 
 export const pullDomains = () => {
   return async (dispatch, getState) => {
-    fetch(`${API_URL}/manage/domains`)
+    fetch(`${API_URL}/manage/getAllDomains`, {
+      method: 'POST',
+    })
     .then(response => {
       return response.json()
     })

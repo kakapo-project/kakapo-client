@@ -14,7 +14,7 @@ const isUserLoggedIn = () => {
     //TODO: check jwt
     return true
   } else {
-    return true //TODO:...
+    return false
   }
 }
 

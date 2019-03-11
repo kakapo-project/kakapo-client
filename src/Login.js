@@ -2,10 +2,36 @@ import React, { Component } from 'react'
 import { Button, Divider, Form, Grid, Header, Image, Message, Segment, Transition } from 'semantic-ui-react'
 
 import logo from './logo.svg'
+import { API_URL } from './actions/config';
 
 
 
 class LoginForm extends Component {
+
+  state = {
+    username: '',
+    password: '',
+  }
+
+  login(e) {
+    fetch(`${API_URL}/users/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      }),
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((data) => {
+      console.log('login data: ', data)
+    })
+  }
+
   render() {
     return (
       <div className='login-form' style={{height: '100vh', background: 'linear-gradient(45deg, #222 0%, #005322 30%, #D8DD87 100%)'}}>
@@ -24,16 +50,27 @@ class LoginForm extends Component {
                   <Header as='h2' color='grey' textAlign='center'>
                     <Image src={logo} /> Log in to Your Account
                   </Header>
-                  <Form.Input fluid icon='user' iconPosition='left' placeholder='E-mail address' />
+
+                  <Form.Input
+                    fluid
+                    icon='user'
+                    iconPosition='left'
+                    placeholder='E-mail address'
+                    value={this.state.username}
+                    onChange={(e, data) => this.setState({ username: data.value })}
+                  />
+
                   <Form.Input
                     fluid
                     icon='lock'
                     iconPosition='left'
                     placeholder='Password'
                     type='password'
+                    value={this.state.password}
+                    onChange={(e, data) => this.setState({ password: data.value })}
                   />
 
-                  <Button color='grey' fluid size='large'>
+                  <Button onClick={ (e) => this.login(e) } color='grey' fluid size='large'>
                     Login
                   </Button>
                 </Segment>
