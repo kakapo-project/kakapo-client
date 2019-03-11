@@ -127,7 +127,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadedPage: () => dispatch(loadedPage('Home')),
+  loadedPage: () => dispatch(loadedPage(true)),
   setEntitySelection: (selection) => dispatch(setEntitySelection(selection)),
 })
 

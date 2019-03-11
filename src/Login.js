@@ -3,6 +3,7 @@ import { Button, Divider, Form, Grid, Header, Image, Message, Segment, Transitio
 
 import logo from './logo.svg'
 import { API_URL } from './actions/config';
+import { Route, Redirect } from 'react-router'
 
 
 
@@ -11,29 +12,43 @@ class LoginForm extends Component {
   state = {
     username: '',
     password: '',
+    status: 'NONE',
   }
 
-  login(e) {
-    fetch(`${API_URL}/users/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password,
-      }),
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((data) => {
-      console.log('login data: ', data)
-    })
+  async login(e) {
+
+    try {
+      let response = await fetch(`${API_URL}/users/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.username,
+          password: this.state.password,
+        }),
+      })
+
+      let data = await response.json()
+
+      if (data && data.error === 'Unauthorized') {
+        this.setState({ status: 'UNAUTHORIZED' })
+      } else if (data && data.error) {
+        this.setState({ status: 'FAILED' })
+      } else {
+        localStorage.setItem('kakapoJWT', data.accessToken)
+        localStorage.setItem('kakapoRefresh', data.refreshToken)
+        this.setState({ status: 'SUCCESS' })
+      }
+    } catch (err) {
+      this.setState({ status: 'FAILED' })
+    }
   }
 
   render() {
-    return (
+    return ( this.state.status === 'SUCCESS' ?
+      <Redirect to='/' />
+      :
       <div className='login-form' style={{height: '100vh', background: 'linear-gradient(45deg, #222 0%, #005322 30%, #D8DD87 100%)'}}>
         <style>{`
           body > div,
@@ -50,6 +65,23 @@ class LoginForm extends Component {
                   <Header as='h2' color='grey' textAlign='center'>
                     <Image src={logo} /> Log in to Your Account
                   </Header>
+
+                  { this.state.status === 'UNAUTHORIZED' ?
+                    <Message
+                      icon='lock'
+                      header='Log in failed'
+                      content='Was the username/password correct?'
+                    />
+                    :
+                    this.state.status === 'FAILED' ?
+                    <Message
+                      icon='question circle'
+                      header='Oops'
+                      content='Something went wrong'
+                    />
+                    :
+                    <></>
+                  }
 
                   <Form.Input
                     fluid

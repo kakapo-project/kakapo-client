@@ -18,6 +18,10 @@ class Home extends Component {
   state = {
   }
 
+  componentWillMount() {
+    this.props.pullDomains()
+  }
+
   render() {
     return (
       <div>

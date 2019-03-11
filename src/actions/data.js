@@ -11,13 +11,20 @@ export const clearPullDataError = () => {
 
 export const pullDomains = () => {
   return async (dispatch, getState) => {
-    fetch(`${API_URL}/manage/getAllDomains`, {
-      method: 'POST',
-    })
-    .then(response => {
-      return response.json()
-    })
-    .then(data => {
+    try {
+      let response = await fetch(`${API_URL}/manage/getAllDomains`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('kakapoJWT')}`,
+        },
+        body: JSON.stringify({}),
+      })
+
+      let data = await response.json()
+
+      console.log('domains: ', data)
+
       let domains = data.map(x => ({
         name: x.name,
         type: x.type,
@@ -28,13 +35,12 @@ export const pullDomains = () => {
         type: ACTIONS.SET_DOMAINS,
         domains: domains,
       })
-    })
-    .catch(err => {
+    } catch (err) {
       dispatch({
         type: ACTIONS.PULL_DATA_ERROR,
         msg: err.message,
       })
-    })
+    }
   }
 }
 

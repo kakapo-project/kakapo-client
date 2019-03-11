@@ -57,11 +57,10 @@ export const clickToggleSidebar = () => {
   return { type: ACTIONS.TOGGLE_SIDEBAR }
 }
 
-export const loadedPage = (page) => {
-  switch (page) {
-    case 'Home':
-      return { type: ACTIONS.OPEN_SIDEBAR }
-    default:
-      return { type: ACTIONS.CLOSE_SIDEBAR }
+export const loadedPage = (defaultIsOpen = false) => {
+  if (defaultIsOpen) {
+    return { type: ACTIONS.OPEN_SIDEBAR }
+  } else {
+    return { type: ACTIONS.CLOSE_SIDEBAR }
   }
 }

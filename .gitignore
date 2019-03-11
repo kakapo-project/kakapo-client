@@ -5,6 +5,7 @@ www/
 .env
 
 /.idea/workspace.xml
+.vscode
 
 
 # dependencies

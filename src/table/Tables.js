@@ -215,7 +215,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   tableWantsToLoad: name => dispatch(tableWantsToLoad(name)),
-  loadedPage: () => dispatch(loadedPage('Tables')),
+  loadedPage: () => dispatch(loadedPage()),
 })
 
 export default connect(
