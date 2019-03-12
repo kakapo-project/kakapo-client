@@ -17,7 +17,7 @@ const Tabs = Object.freeze({
   entities: 0,
   settings: 1,
 })
-class DomainDashboard extends Component {
+class Dashboard extends Component {
 
   state = {
     tab: Tabs.entities,
@@ -134,4 +134,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DomainDashboard)
+)(Dashboard)

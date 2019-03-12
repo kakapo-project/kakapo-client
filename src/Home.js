@@ -23,9 +23,10 @@ class Home extends Component {
   }
 
   render() {
+    console.log('domains: ', this.props.domain)
     return (
       <div>
-        <Header />
+        <Header hideSidebarToggle={true} />
         <Segment basic>
           <Transition.Group as={Grid} animation='scale' duration={400} container doubling columns={3} >
             { this.props.domains.map( (domain, idx) =>
@@ -33,15 +34,15 @@ class Home extends Component {
                 <Card
                   link
                   as={Link}
-                  to='/'
+                  to={`/${domain.name}`}
                 >
                   <Segment textAlign='center' basic>
                     <Icon circular inverted size='huge' color='black' name='settings' />
                   </Segment>
                   <Card.Content>
                     <Card.Header>{domain.name}</Card.Header>
-                    <Card.Meta>last updated last updated</Card.Meta>
-                    <Card.Description>Description</Card.Description>
+                    <Card.Meta>{domain.type}</Card.Meta>
+                    <Card.Description>{domain.description}</Card.Description>
                   </Card.Content>
                   <Card.Content extra>
                     <a>
