@@ -21,7 +21,7 @@ class LoginForm extends Component {
       let response = await fetch(`${API_URL}/users/login`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify({
           username: this.state.username,

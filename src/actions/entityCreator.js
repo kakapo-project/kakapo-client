@@ -31,7 +31,7 @@ export const closeEntityCreatorErrorMessage = () => {
   }
 }
 
-const commitTableChanges = (dispatch, data) => {
+const commitTableChanges = async (dispatch, data) => {
 
   const getAllKeys = (obj) => Object.keys(obj).map(x => parseInt(x))
 
@@ -84,40 +84,36 @@ const commitTableChanges = (dispatch, data) => {
     }
   }
 
-  //send
-  fetch(`${API_URL}/manage/table`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify(postData),
-  })
-    .then(response => {
-      return response.json()
+  try {
+    let response = await fetch(`${API_URL}/manage/createTable`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(postData),
     })
-    .then(data => {
-      console.log('finished sending data')
-      console.log(data)
-      if (data.error) { //For some reason it returned an error message, but it was a 200 http code
-        return dispatch({
-          type: ACTIONS.ENTITY_CREATOR.ERROR,
-          msg: data.error,
-        })
-      } else {
-        return dispatch({
-          type: ACTIONS.ENTITY_CREATOR.COMMIT_CHANGES,
-        })
-      }
-    })
-    .catch(data => {
+
+    let data = await response.json()
+
+    if (data.error) { //For some reason it returned an error message, but it was a 200 http code
       return dispatch({
         type: ACTIONS.ENTITY_CREATOR.ERROR,
-        msg: data && data.error,
+        msg: data.error,
       })
+    } else {
+      return dispatch({
+        type: ACTIONS.ENTITY_CREATOR.COMMIT_CHANGES,
+      })
+    }
+  } catch (err) {
+    return dispatch({
+      type: ACTIONS.ENTITY_CREATOR.ERROR,
+      msg: err && err.message,
     })
+  }
 }
 
-const commitScriptChanges = (dispatch, data) => {
+const commitScriptChanges = async (dispatch, data) => {
   //parse data
   let postData = {
     name: `${data.scriptName}`,
@@ -125,40 +121,37 @@ const commitScriptChanges = (dispatch, data) => {
     text: '',
   }
 
-  //send
-  fetch(`${API_URL}/manage/script`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify(postData),
-  })
-    .then(response => {
-      return response.json()
+  try {
+    let response = await fetch(`${API_URL}/manage/createScript`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': `Bearer ${localStorage.getItem('kakapoJWT')}`,
+      },
+      body: JSON.stringify(postData),
     })
-    .then(data => {
-      console.log('finished sending data')
-      console.log(data)
-      if (data.error) { //For some reason it returned an error message, but it was a 200 http code
-        return dispatch({
-          type: ACTIONS.ENTITY_CREATOR.ERROR,
-          msg: data.error,
-        })
-      } else {
-        return dispatch({
-          type: ACTIONS.ENTITY_CREATOR.COMMIT_CHANGES,
-        })
-      }
-    })
-    .catch(data => {
+
+    let data = await response.json()
+
+    if (data.error) { //For some reason it returned an error message, but it was a 200 http code
       return dispatch({
         type: ACTIONS.ENTITY_CREATOR.ERROR,
-        msg: data && data.error,
+        msg: data.error,
       })
+    } else {
+      return dispatch({
+        type: ACTIONS.ENTITY_CREATOR.COMMIT_CHANGES,
+      })
+    }
+  } catch (err) {
+    return dispatch({
+      type: ACTIONS.ENTITY_CREATOR.ERROR,
+      msg: err && err.message,
     })
+  }
 }
 
-const commitQueryChanges = (dispatch, data) => {
+const commitQueryChanges = async (dispatch, data) => {
   //parse data
   let postData = {
     name: `${data.queryName}`,
@@ -166,37 +159,33 @@ const commitQueryChanges = (dispatch, data) => {
     statement: '',
   }
 
-  //send
-  fetch(`${API_URL}/manage/query`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify(postData),
-  })
-    .then(response => {
-      return response.json()
+  try {
+    let response = await fetch(`${API_URL}/manage/createQuery`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(postData),
     })
-    .then(data => {
-      console.log('finished sending data')
-      console.log(data)
-      if (data.error) { //For some reason it returned an error message, but it was a 200 http code
-        return dispatch({
-          type: ACTIONS.ENTITY_CREATOR.ERROR,
-          msg: data.error,
-        })
-      } else {
-        return dispatch({
-          type: ACTIONS.ENTITY_CREATOR.COMMIT_CHANGES,
-        })
-      }
-    })
-    .catch(data => {
+
+    let data = await response.json()
+
+    if (data.error) { //For some reason it returned an error message, but it was a 200 http code
       return dispatch({
         type: ACTIONS.ENTITY_CREATOR.ERROR,
-        msg: data && data.error,
+        msg: data.error,
       })
+    } else {
+      return dispatch({
+        type: ACTIONS.ENTITY_CREATOR.COMMIT_CHANGES,
+      })
+    }
+  } catch (err) {
+    return dispatch({
+      type: ACTIONS.ENTITY_CREATOR.ERROR,
+      msg: err && err.message,
     })
+  }
 }
 
 export const commitChanges = () => {
@@ -206,11 +195,11 @@ export const commitChanges = () => {
     let data = getState().entityCreator
     switch (data.mode) {
       case 'Table':
-        return commitTableChanges(dispatch, data)
+        return await commitTableChanges(dispatch, data)
       case 'Query':
-        return commitQueryChanges(dispatch, data)
+        return await commitQueryChanges(dispatch, data)
       case 'Script':
-        return commitScriptChanges(dispatch, data)
+        return await commitScriptChanges(dispatch, data)
     }
 
   }
