@@ -14,6 +14,7 @@ import MyProfile from './MyProfile'
 import Signup from './Signup'
 
 const isUserLoggedIn = () => {
+
   const jwt = localStorage.getItem('kakapoJWT')
   if (jwt) {
     let decoded = jwtDecode(jwt)
@@ -23,6 +24,7 @@ const isUserLoggedIn = () => {
     if (now < exp) {
       return true
     } else {
+      //TODO: try it with the refresh token too
       return false
     }
   } else {
@@ -54,7 +56,7 @@ class App extends Component {
               return <Home />
             } else {
               return <Redirect to='/login' />
-            }
+            } //TODO: all these pages should have this, login should redirect if already logged in
           }} />
           <Route path='/login' component={Login}/>
           <Route path='/settings' component={Settings}/>
