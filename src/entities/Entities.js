@@ -42,21 +42,22 @@ class Entities extends Component {
     }
   }
 
-  getEntityLink(entity) {
+  getEntityLink(domain, entity) {
     switch (entity.type) {
       case 'query':
-        return `/queries/${entity.name}`
+        return `${domain}/queries/${entity.name}`
       case 'view':
         return '/'
       case 'table':
-        return `/tables/${entity.name}`
+        return `${domain}/tables/${entity.name}`
       case 'script':
-        return `/scripts/${entity.name}`
+        return `${domain}/scripts/${entity.name}`
     }
   }
 
   render() {
     let selectedRenderEntities = this.props.select
+    let domain = this.props.domain
 
     let entities = this.getEntities()
 
@@ -78,7 +79,7 @@ class Entities extends Component {
               <Card
                 link
                 as={Link}
-                to={this.getEntityLink(entity)}
+                to={this.getEntityLink(domain, entity)}
               >
                 <Segment textAlign='center' basic>{this.renderIcon(entity)}</Segment>
                 <Card.Content>
@@ -87,10 +88,8 @@ class Entities extends Component {
                   <Card.Description>{entity.description}</Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                  <a>
-                    <Icon name='favorite' color={(entity.isBookmarked)? 'yellow': 'grey'}/>
-                    Bookmark
-                  </a>
+                  <Icon name='favorite' color={(entity.isBookmarked)? 'yellow': 'grey'}/>
+                  Bookmark
                 </Card.Content>
               </Card>
             </Grid.Column>

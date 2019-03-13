@@ -89,20 +89,23 @@ class Header extends Component {
             }
             <Menu.Item
               name='user'
-              onClick={(e, {name}) => {}}
+              as={Link}
+              to='/my-profile'
             >
               <Icon name='user' />
             </Menu.Item>
             {/* TODO: if admin */}
             <Menu.Item
               name='settings'
-              onClick={(e, {name}) => {}}
+              as={Link}
+              to='/settings'
             >
               <Icon name='settings' />
             </Menu.Item>
             <Menu.Item
               name='documentation'
-              onClick={(e, {name}) => {}}
+              as='a'
+              href='https://kakapo.ai'
             >
               <Icon name='file alternate' />
             </Menu.Item>

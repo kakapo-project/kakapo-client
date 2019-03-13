@@ -25,6 +25,9 @@ class Dashboard extends Component {
   }
 
   render() {
+    const { domain } = this.props.match.params
+    const { selections } = this.props
+
     return (
       <div>
         <Header />
@@ -71,7 +74,7 @@ class Dashboard extends Component {
           </Sidebar>
 
           <Sidebar.Pusher>
-            <Entities select={this.props.selections} />
+            <Entities domain={domain} select={selections} />
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </div>

@@ -45,10 +45,8 @@ class Home extends Component {
                     <Card.Description>{domain.description}</Card.Description>
                   </Card.Content>
                   <Card.Content extra>
-                    <a>
-                      <Icon name='favorite' color='grey'/>
-                      Bookmark
-                    </a>
+                    <Icon name='favorite' color='grey'/>
+                    Bookmark
                   </Card.Content>
                 </Card>
               </Grid.Column>

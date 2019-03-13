@@ -9,6 +9,9 @@ import Queries from './queries/Queries'
 import Scripts from './scripts/Scripts'
 import Dashboard from './Dashboard'
 import Login from './Login'
+import Settings from './Settings'
+import MyProfile from './MyProfile'
+import Signup from './Signup'
 
 const isUserLoggedIn = () => {
   const jwt = localStorage.getItem('kakapoJWT')
@@ -54,10 +57,13 @@ class App extends Component {
             }
           }} />
           <Route path='/login' component={Login}/>
-          <Route path='/:domain' component={Dashboard}/>
+          <Route path='/settings' component={Settings}/>
+          <Route path='/my-profile' component={MyProfile}/>
+          <Route path='/sign-up' component={Signup}/>
           <Route path='/:domain/tables/:name' component={Tables}/>
           <Route path='/:domain/queries/:name' component={Queries}/>
           <Route path='/:domain/scripts/:name' component={Scripts}/>
+          <Route path='/:domain' component={Dashboard}/>
 
         </Switch>
       </main>
