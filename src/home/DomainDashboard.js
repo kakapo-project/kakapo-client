@@ -4,15 +4,15 @@ import Tab, { Button, Icon, Image, Menu, Search, Segment, Sidebar } from 'semant
 import { connect } from 'react-redux'
 
 
-import Login from './Login.js'
+import Login from '../Login.js'
 
-import Header from './Header.js'
-import Entities from './entities/Entities.js'
-import Settings from './Settings.js'
+import Header from '../Header.js'
+import Entities from '../entities/Entities.js'
+import Stator from '../Stator.js'
 
-import { loadedPage, setEntitySelection, Selections } from './actions'
+import { loadedPage, setEntitySelection, Selections, startWebsocketConnection } from '../actions'
 
-class Dashboard extends Component {
+class DomainDashboard extends Component {
 
   state = {}
 
@@ -29,7 +29,7 @@ class Dashboard extends Component {
     const { selections } = this.props
 
     return (
-      <div>
+      <Stator>
         <Header />
         <Sidebar.Pushable className='basic attached' as={Segment} style={{height: '100vh', border: 0}}>
           <Sidebar
@@ -38,7 +38,7 @@ class Dashboard extends Component {
             icon='labeled'
             inverted
             vertical
-            visible={this.props.isSidebarOpen()}
+            visible={this.props.isSidebarOpen}
             width='thin'
             style={{backgroundImage: 'linear-gradient(#1b1c1d, rgb(0, 83, 34)'}}
           >
@@ -77,14 +77,14 @@ class Dashboard extends Component {
             <Entities domain={domain} select={selections} />
           </Sidebar.Pusher>
         </Sidebar.Pushable>
-      </div>
+      </Stator>
     )
   }
 }
 
 
 const mapStateToProps = (state) => ({
-  isSidebarOpen: () => state.sidebar.isOpen,
+  isSidebarOpen: state.sidebar.isOpen,
   selections: state.home.selections,
   error: null,
 })
@@ -97,4 +97,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Dashboard)
+)(DomainDashboard)

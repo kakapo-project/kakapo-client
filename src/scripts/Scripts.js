@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 
 import ErrorMsg from '../ErrorMsg'
-import { WS_URL } from '../config'
 import { DEFAULT_TYPE, ALL_TYPES } from '../actions/columns'
 
 
@@ -101,6 +100,7 @@ class Scripts extends Component {
   }
 
   setupConnection() {
+    /*
     const { name } = this.props.match.params
     const url = `${WS_URL}/script/${name}`
     this.socket = new WebSocket(url);
@@ -143,6 +143,7 @@ class Scripts extends Component {
         }
       }
     }
+    */
   }
 
   uploadText(value) {
@@ -286,7 +287,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadedPage: () => dispatch(loadedPage('Scripts')),
+  loadedPage: () => dispatch(loadedPage()),
 })
 
 export default connect(

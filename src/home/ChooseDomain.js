@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 
-import Login from './Login.js'
+import Login from '../Login.js'
 
-import Header from './Header.js'
-import Entities from './entities/Entities.js'
-import Settings from './Settings.js'
+import Header from '../Header.js'
+import Entities from '../entities/Entities.js'
+import Stator from '../Stator.js'
 
-import { pullDomains, setEntitySelection, Selections } from './actions'
+import { pullDomains, setEntitySelection, Selections } from '../actions'
 
-class Home extends Component {
+class ChooseDomain extends Component {
 
   state = {
   }
@@ -25,7 +25,7 @@ class Home extends Component {
   render() {
     console.log('domains: ', this.props.domain)
     return (
-      <div>
+      <Stator>
         <Header hideSidebarToggle={true} />
         <Segment basic>
           <Transition.Group as={Grid} animation='scale' duration={400} container doubling columns={3} >
@@ -53,7 +53,7 @@ class Home extends Component {
             )}
           </Transition.Group>
         </Segment>
-      </div>
+      </Stator>
     )
   }
 }
@@ -71,4 +71,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Home)
+)(ChooseDomain)

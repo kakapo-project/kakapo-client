@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 
 import ErrorMsg from '../ErrorMsg'
-import { WS_URL } from '../config'
 import { DEFAULT_TYPE, ALL_TYPES } from '../actions/columns'
 
 
@@ -146,6 +145,7 @@ class Queries extends Component {
   }
 
   setupConnection() {
+    /*
     const { name } = this.props.match.params
     const url = `${WS_URL}/query/${name}`
     this.socket = new WebSocket(url);
@@ -202,6 +202,7 @@ class Queries extends Component {
         }
       }
     }
+    */
   }
 
   uploadStatement(value) {
@@ -382,7 +383,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadedPage: () => dispatch(loadedPage('Queries')),
+  loadedPage: () => dispatch(loadedPage()),
 })
 
 export default connect(

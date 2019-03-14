@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import ErrorMsg from '../ErrorMsg'
 import CreateEntities from './CreateEntities'
 
-import { API_URL } from '../config'
 
 import { pullData, clearPullDataError } from '../actions'
 import { connect } from 'react-redux'

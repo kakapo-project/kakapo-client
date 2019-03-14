@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
 
-import Home from './Home'
+import ChooseDomain from './home/ChooseDomain'
 import Tables from './table/Tables'
 import Queries from './queries/Queries'
 import Scripts from './scripts/Scripts'
-import Dashboard from './Dashboard'
+import DomainDashboard from './home/DomainDashboard'
 import Login from './Login'
 import Settings from './Settings'
 import MyProfile from './MyProfile'
@@ -53,7 +53,7 @@ class App extends Component {
         <Switch>
           <Route exact path='/' render={() => {
             if (isUserLoggedIn()) {
-              return <Home />
+              return <ChooseDomain />
             } else {
               return <Redirect to='/login' />
             } //TODO: all these pages should have this, login should redirect if already logged in
@@ -65,7 +65,7 @@ class App extends Component {
           <Route path='/:domain/tables/:name' component={Tables}/>
           <Route path='/:domain/queries/:name' component={Queries}/>
           <Route path='/:domain/scripts/:name' component={Scripts}/>
-          <Route path='/:domain' component={Dashboard}/>
+          <Route path='/:domain' component={DomainDashboard}/>
 
         </Switch>
       </main>

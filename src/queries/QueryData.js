@@ -27,7 +27,6 @@ import Header from '../Header.js'
 import ErrorMsg from '../ErrorMsg'
 
 
-import { WS_URL } from '../config'
 import { connect } from 'react-redux'
 
 import { requestingTableData, addRow, deleteRow, modifyValue } from '../actions'

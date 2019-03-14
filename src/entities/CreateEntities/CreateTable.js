@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { Button, Card, Container, Divider, Dropdown, Header, Grid, Icon, Image, Input, Menu, Modal, Segment, Sidebar, Transition } from 'semantic-ui-react'
 import ErrorMsg from '../../ErrorMsg'
 
-import { API_URL } from '../../config'
 import { DEFAULT_TYPE, ALL_TYPES } from '../../actions/columns'
 
 import {

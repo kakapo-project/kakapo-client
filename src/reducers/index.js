@@ -1,22 +1,26 @@
 
 import { combineReducers } from 'redux'
-import table from './table'
-import sidebar from './sidebar'
-import entityCreator from './entityCreator'
-import data from './data'
-import home from './home'
+import table from './table.js'
+import script from './script.js'
+import sidebar from './sidebar.js'
+import entityCreator from './entityCreator.js'
+import data from './data.js'
+import home from './home.js'
 
 
-import createTable from './createTable'
-import createScript from './createScript'
-import createQuery from './createQuery'
+import createTable from './createTable.js'
+import createScript from './createScript.js'
+import createQuery from './createQuery.js'
+import ws from './ws.js'
 
 export default combineReducers({
   sidebar,
   table,
+  script,
   entityCreator,
   data,
   home,
+  ws,
   createQuery,
   createTable,
   createScript,

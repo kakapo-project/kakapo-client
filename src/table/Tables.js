@@ -24,7 +24,6 @@ import Header from '../Header.js'
 import ErrorMsg from '../ErrorMsg'
 
 
-import { WS_URL } from '../config'
 import { connect } from 'react-redux'
 
 import { tableWantsToLoad, loadedPage } from '../actions'

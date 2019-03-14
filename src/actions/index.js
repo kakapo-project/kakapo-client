@@ -1,7 +1,11 @@
 
-export * from './table'
-export * from './entityCreator'
-export * from './data'
+import { WEBSOCKET_CONNECT, WEBSOCKET_SEND } from '@giantmachines/redux-websocket'
+import { WS_URL } from './config.js'
+
+export * from './table.js'
+export * from './entityCreator.js'
+export * from './data.js'
+export * from './ws.js'
 
 export const ACTIONS = {
   OPEN_SIDEBAR: 'OPEN_SIDEBAR',
@@ -34,8 +38,7 @@ export const ACTIONS = {
   }
 }
 
-
-
+//TODO: this should be in a different file
 export const Selections = Object.freeze({
   tables: 'table',
   queries: 'query',
