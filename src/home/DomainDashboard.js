@@ -10,7 +10,7 @@ import Header from '../Header.js'
 import Entities from '../entities/Entities.js'
 import Stator from '../Stator.js'
 
-import { loadedPage, setEntitySelection, Selections, startWebsocketConnection } from '../actions'
+import { loadedPage, setEntitySelection, Selections } from '../actions'
 
 class DomainDashboard extends Component {
 

@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 import { Button, Card, Container, Divider, Form, Grid, Icon, Image, Menu, Message, Segment, Sidebar, Tab } from 'semantic-ui-react'
 import Header from './Header.js'
 
-import { startWebsocketConnection } from './actions'
+import { ACTION_STATUS, startWebsocketConnection, authenticateWebsocket, finishAuthenticateWebsocket } from './actions'
+
 
 type Props = {
   children?: Node,
@@ -14,11 +15,33 @@ type Props = {
 class Stator extends Component<Props> {
 
   componentWillMount() {
-    this.props.startWebsocketConnection()
+    switch (this.props.ws.status) {
+      case ACTION_STATUS.NOT_CONNECTED:
+        this.props.startWebsocketConnection()
+        return
+      default:
+        return
+    }
+
+  }
+
+  componentWillUnmount() {
+    //TODO: stop websocket connection
   }
 
   render() {
-    console.log('ws status: ', this.props.ws)
+    switch (this.props.ws.status) {
+      case ACTION_STATUS.CONNECTED:
+        const token = localStorage.getItem('kakapoJWT')
+        this.props.authenticateWebsocket(token)
+        break
+      case ACTION_STATUS.AUTHENTICATED:
+        this.props.finishAuthenticateWebsocket()
+        break
+      default:
+        break
+    }
+
     return (
       <div>
         {this.props.children}
@@ -33,6 +56,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   startWebsocketConnection: () => dispatch(startWebsocketConnection()),
+  authenticateWebsocket: (token) => dispatch(authenticateWebsocket(token)),
+  finishAuthenticateWebsocket: () => dispatch(finishAuthenticateWebsocket()),
 })
 
 export default connect(
