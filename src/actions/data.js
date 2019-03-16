@@ -159,6 +159,7 @@ const pullScripts = async (dispatch, getState) => {
   }
 }
 
+//TODO: rename retrieveData
 export const pullData = () => {
   return async (dispatch, getState) => {
     let pullTablesPromise = pullTables(dispatch, getState)

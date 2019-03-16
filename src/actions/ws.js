@@ -8,6 +8,7 @@ export const ACTION_STATUS = {
   NOT_CONNECTED: 'NOT_CONNECTED',
   CONNECTED: 'CONNECTED', //Connected, but not authenticated
   AUTHENTICATED: 'AUTHENTICATED',
+  REQUIRE_AUTH: 'REQUIRE_AUTH',
 }
 
 export const startWebsocketConnection = () => {

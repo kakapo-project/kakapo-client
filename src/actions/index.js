@@ -6,6 +6,7 @@ export * from './table.js'
 export * from './entityCreator.js'
 export * from './data.js'
 export * from './ws.js'
+export * from './script.js'
 
 export const ACTIONS = {
   OPEN_SIDEBAR: 'OPEN_SIDEBAR',

@@ -32,6 +32,7 @@ class Stator extends Component<Props> {
   render() {
     switch (this.props.ws.status) {
       case ACTION_STATUS.CONNECTED:
+      case ACTION_STATUS.REQUIRE_AUTH:
         const token = localStorage.getItem('kakapoJWT')
         this.props.authenticateWebsocket(token)
         break

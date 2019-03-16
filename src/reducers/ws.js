@@ -27,7 +27,7 @@ const sidebar = (state = initialState, action) => {
     case ACTIONS.WEBSOCKET_WAITING_FOR_AUTH:
       return {
         ...state,
-        status: ACTION_STATUS.CONNECTED
+        status: ACTION_STATUS.REQUIRE_AUTH
       }
     default:
       return state

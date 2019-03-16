@@ -19,7 +19,9 @@ import 'codemirror/theme/darcula.css'
 
 import Header from '../Header.js'
 
-import { loadedPage } from '../actions'
+import { loadedPage, retrieveScript, ACTION_STATUS } from '../actions'
+import Stator from '../Stator.js'
+import ScriptBox from './ScriptBox';
 
 
 const ScriptsSidebar = (props) => (
@@ -90,126 +92,15 @@ const ScriptsSidebar = (props) => (
 
 class Scripts extends Component {
 
-  state = {
-    sidebarOpen: false,
-    localStatement: null,
-    statement: '',
-    isRunningQuery: false,
-    isTableLoaded: false,
-    error: null,
-  }
-
-  setupConnection() {
-    /*
-    const { name } = this.props.match.params
-    const url = `${WS_URL}/script/${name}`
-    this.socket = new WebSocket(url);
-    console.log('socket: ', this.socket)
-
-    let sendGetQuery = {
-      action: 'getScript',
-    }
-
-    this.socket.onopen = (event) => {
-      this.socket.send(JSON.stringify(sendGetQuery))
-    }
-
-    this.socket.onerror = (event) => {
-      console.log('error')
-      this.raiseError('Could not setup connection')
-    }
-
-    this.socket.onclose = (event) => {
-      console.error('WebSocket closed: ', event)
-    }
-
-    this.socket.onmessage = (event) => {
-      let incomingData = JSON.parse(event.data)
-
-      let action = incomingData.action
-      let rawData = incomingData.data
-
-      switch (action) {
-        case 'getScript':
-        case 'postScript':
-          console.log('getTable: rawData: ', rawData)
-          this.setState({
-            statement: rawData.statement,
-          })
-          return
-        case 'runScript': {
-          console.log('runScript: rawData: ', rawData)
-          return
-        }
-      }
-    }
-    */
-  }
-
-  uploadText(value) {
-    console.log('uploadText')
-    const { name } = this.props.match.params
-
-    let postScriptQuery = {
-      action: 'postScript',
-      data: {
-        name: name,
-        text: value
-      }
-    }
-    this.socket.send(JSON.stringify(postScriptQuery))
-  }
-
-  updateEvent = _.debounce((e) => console.log('e: ', e), 500)
-
-  toggleSidebar() {
-    this.setState({
-      sidebarOpen: !this.state.sidebarOpen,
-    })
-  }
-
-  raiseError(msg) {
-    this.setState({ error: msg })
-  }
-
-  errorMsgTypes = ['Retry', 'Go Back']
-  closeErrorMessage(type) {
-    switch (type) {
-      case this.errorMsgTypes[0]:
-        this.setupConnection()
-        this.setState({ error: null })
-        return
-      case this.errorMsgTypes[1]:
-        this.props.history.push('/')
-        return
-    }
-  }
-
-  runQuery() {
-    this.setState({ isRunningQuery: true })
-
-    let sendRunQuery = {
-      action: 'runQuery',
-      params: []
-    }
-    this.socket.send(JSON.stringify(sendRunQuery))
-  }
-
   componentWillMount() {
     this.props.loadedPage()
   }
 
-  componentDidMount() {
-    this.setupConnection()
-  }
-
-  uploadEditorChange = _.debounce((value) => {
-    this.uploadText(value)
-  }, 500)
-
   render() {
+    const { name, domain } = this.props.match.params
+
     return (
-      <div>
+      <Stator>
         <style>
           {`
             .react-codemirror2 > div.CodeMirror {
@@ -218,60 +109,13 @@ class Scripts extends Component {
           `}
         </style>
         <Header editor />
-        <ErrorMsg error={this.state.error} onClose={(type) => this.closeErrorMessage(type)} types={this.errorMsgTypes}/>
         <Sidebar.Pushable className='basic attached' as={Segment} style={{height: 'calc(100vh - 5.15em)', border: 0}}>
-          <ScriptsSidebar sidebarOpen={this.props.isSidebarOpen()} />
-
+          <ScriptsSidebar sidebarOpen={this.props.isSidebarOpen} />
           <Sidebar.Pusher>
-            <Segment basic padded style={{}}>
-              <Segment padded='very' style={{ minHeight: '100%' }}>
-                <Form>
-                  <CodeMirror
-                    options={{
-                      theme: 'darcula',
-                      mode: 'text/x-mysql',
-                      lineNumbers: true,
-                      styleActiveLine: true,
-                    }}
-                    autoSave
-                    value={this.state.localStatement || this.state.statement}
-                    onBeforeChange={(editor, data, value) => {
-                      this.setState({ localStatement: value })
-                      this.uploadEditorChange(value)
-                    }}
-                    onChange={(editor, data, value) => {
-                      console.log('statment        changed: ', editor, data, value) //TODO: when to use this
-                    }}
-                  />
-                </Form>
-                <Segment>
-                  <Grid columns='equal'>
-                    <Grid.Row>
-                      <Grid.Column>
-                        <Button
-                          color='black'
-                          icon
-                          size='large'
-                          floated='left'
-                          labelPosition='right'
-                          loading={this.state.isRunningQuery}
-                          onClick={(e) => this.runQuery()}
-                        >
-                          Run
-                          {this.state.isRunningQuery ? <></> :
-                            <Icon color='green' name='play' />
-                          }
-                        </Button>
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
-
-                </Segment>
-              </Segment>
-            </Segment>
+            <ScriptBox name={name} domain={domain} />
           </Sidebar.Pusher>
         </Sidebar.Pushable>
-      </div>
+      </Stator>
     )
   }
 
@@ -282,7 +126,7 @@ class Scripts extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isSidebarOpen: () => state.sidebar.isOpen,
+  isSidebarOpen: state.sidebar.isOpen,
   error: null,
 })
 

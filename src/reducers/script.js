@@ -22,52 +22,9 @@ const initialState = {
 
 const handleWebsocketMessage = (action, data, state) => {
 
-  console.log('action: ', action)
-  console.log('data: ', data)
-
   switch (action) {
     case 'getTable':
-      let schema = data.schema
-      let columnSchema = schema.columns
-      let constraint = schema.constraint
-
-      //get primary key
-      let primaryKey = constraint.map(x => x.key).filter(x => x)
-      if (primaryKey.length !== 1) {
-        return { error: 'This table does not have any keys' }
-      }
-      primaryKey = primaryKey[0]
-
-      //format column infor into map
-      let columnInfo = {}
-      for (let x of columnSchema) {
-        columnInfo[x.name] = x
-      }
-
-      //done
-      return {
-        columnInfo: columnInfo,
-        constraint: constraint,
-        primaryKey: primaryKey,
-
-        isTableMetaLoaded: true,
-        isLoaded: state.isTableDataLoaded
-      }
-    case 'getTableData':
-      let dataset = data.data
-      let columns = data.columns
-
-      return {
-        data: dataset,
-        columns: columns,
-
-        isTableDataLoaded: true,
-        isLoaded: state.isTableMetaLoaded
-      }
-
-    case 'update':
-    case 'create':
-    case 'delete':
+      break
 
   }
 
