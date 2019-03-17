@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { Button, Card, Container, Divider, Dropdown, Form, Grid, Icon, Input, Image, Label, Menu, Segment, Select, Sidebar } from 'semantic-ui-react'
+import { Button, Card, Container, Divider, Dropdown, Form, Grid, Header, Icon, Input, Image, Label, Menu, Segment, Select, Sidebar } from 'semantic-ui-react'
 
 import { connect } from 'react-redux'
 
@@ -12,101 +12,20 @@ import { DEFAULT_TYPE, ALL_TYPES } from '../actions/columns'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import _ from 'lodash'
 
-import 'codemirror/addon/hint/sql-hint'
+import 'codemirror/mode/python/python'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/darcula.css'
 
 
-import Header from '../Header.js'
 
-import { loadedPage, retrieveScript, ACTION_STATUS } from '../actions'
+import { retrieveScript, exitScript, modifyScriptText, commitScriptChanges, ACTION_STATUS } from '../actions'
 
 class Scripts extends Component {
 
   state = {
-    sidebarOpen: false,
-    localStatement: null,
     statement: '',
     isRunningQuery: false,
-    isTableLoaded: false,
     error: null,
-  }
-
-  setupConnection() {
-    const { name, domain } = this.props
-
-    console.log('supposedly sending dispatch')
-    this.props.retrieveScript(name)
-
-    /*
-    const url = `${WS_URL}/script/${name}`
-    this.socket = new WebSocket(url);
-    console.log('socket: ', this.socket)
-
-    let sendGetQuery = {
-      action: 'getScript',
-    }
-
-    this.socket.onopen = (event) => {
-      this.socket.send(JSON.stringify(sendGetQuery))
-    }
-
-    this.socket.onerror = (event) => {
-      console.log('error')
-      this.raiseError('Could not setup connection')
-    }
-
-    this.socket.onclose = (event) => {
-      console.error('WebSocket closed: ', event)
-    }
-
-    this.socket.onmessage = (event) => {
-      let incomingData = JSON.parse(event.data)
-
-      let action = incomingData.action
-      let rawData = incomingData.data
-
-      switch (action) {
-        case 'getScript':
-        case 'postScript':
-          console.log('getTable: rawData: ', rawData)
-          this.setState({
-            statement: rawData.statement,
-          })
-          return
-        case 'runScript': {
-          console.log('runScript: rawData: ', rawData)
-          return
-        }
-      }
-    }
-    */
-  }
-
-  uploadText(value) {
-    console.log('uploadText')
-    const { name } = this.props.match.params
-
-    let postScriptQuery = {
-      action: 'postScript',
-      data: {
-        name: name,
-        text: value
-      }
-    }
-    this.socket.send(JSON.stringify(postScriptQuery))
-  }
-
-  updateEvent = _.debounce((e) => console.log('e: ', e), 500)
-
-  toggleSidebar() {
-    this.setState({
-      sidebarOpen: !this.state.sidebarOpen,
-    })
-  }
-
-  raiseError(msg) {
-    this.setState({ error: msg })
   }
 
   errorMsgTypes = ['Retry', 'Go Back']
@@ -122,6 +41,21 @@ class Scripts extends Component {
     }
   }
 
+  setupConnection() {
+    const { name, domain } = this.props
+
+    console.log('supposedly sending dispatch')
+    this.props.retrieveScript(name)
+  }
+
+  uploadText(value) {
+    this.props.modifyScript(value)
+  }
+
+  uploadEditorChange = _.debounce(() => {
+    this.props.commitScriptChanges()
+  }, 500)
+
   runQuery() {
     this.setState({ isRunningQuery: true })
 
@@ -132,37 +66,57 @@ class Scripts extends Component {
     this.socket.send(JSON.stringify(sendRunQuery))
   }
 
-  uploadEditorChange = _.debounce((value) => {
-    this.uploadText(value)
-  }, 500)
-
   componentDidMount() {
     setTimeout(() => { //TODO: why?
       this.setupConnection()
     }, 0)
   }
 
+  componentWillUnmount() {
+    setTimeout(() => { //TODO: why?
+      this.props.exitScript()
+    }, 0)
+  }
+
   render() {
+
+    let scriptText = ''
+    let scriptName = ''
+    let scriptDescription = ''
+
+    if (this.props.scriptData) {
+      scriptText = this.props.scriptText
+      scriptDescription = this.props.scriptData.description
+      scriptName = this.props.scriptData.name
+    }
+
     return (
       <Segment basic padded style={{}}>
         <ErrorMsg error={this.state.error} onClose={(type) => this.closeErrorMessage(type)} types={this.errorMsgTypes}/>
         <Segment padded='very' style={{ minHeight: '100%' }}>
+          <Header as='h2'>
+            <Icon circular inverted color='scheme-green' name='code' />
+            <Header.Content>
+              {scriptName}
+              <Header.Subheader>{scriptDescription}</Header.Subheader>
+            </Header.Content>
+          </Header>
           <Form>
             <CodeMirror
               options={{
                 theme: 'darcula',
-                mode: 'text/x-mysql',
+                mode: 'python',
                 lineNumbers: true,
                 styleActiveLine: true,
               }}
               autoSave
-              value={this.state.localStatement || this.state.statement}
+              value={scriptText}
               onBeforeChange={(editor, data, value) => {
-                this.setState({ localStatement: value })
-                this.uploadEditorChange(value)
+                this.uploadText(value)
+                this.uploadEditorChange()
               }}
               onChange={(editor, data, value) => {
-                console.log('statment        changed: ', editor, data, value) //TODO: when to use this
+                console.log('statment changed: ', editor, data, value) //TODO: when to use this
               }}
             />
           </Form>
@@ -197,11 +151,15 @@ class Scripts extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  scriptData: state.script.scriptData,
+  scriptText: state.script.scriptText,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadedPage: () => dispatch(loadedPage()),
   retrieveScript: (name) => dispatch(retrieveScript(name)),
+  exitScript: () => dispatch(exitScript()),
+  modifyScript: (newScriptText) => dispatch(modifyScriptText(newScriptText)),
+  commitScriptChanges: () => dispatch(commitScriptChanges()),
 })
 
 export default connect(

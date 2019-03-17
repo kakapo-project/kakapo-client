@@ -19,7 +19,7 @@ import 'codemirror/theme/darcula.css'
 
 import Header from '../Header.js'
 
-import { loadedPage, retrieveScript, ACTION_STATUS } from '../actions'
+import { loadedPage } from '../actions'
 import Stator from '../Stator.js'
 import ScriptBox from './ScriptBox';
 

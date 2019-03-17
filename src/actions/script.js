@@ -25,10 +25,95 @@ export const retrieveScript = (scriptName) => {
           procedure: 'subscribeTo',
           params: {},
           data: {
-              script: scriptName
-          }
-        }
+            script: scriptName,
+          },
+        },
+      },
+      {
+        type: ACTIONS.SET_CURRENT_SCRIPT,
+        scriptName
       }
+    ])
+  }
+}
+
+export const exitScript = () => {
+  return async (dispatch, getState) => {
+    let state = getState()
+    let scriptName = state.script.currentScript
+    if (scriptName) {
+      return dispatch([
+        {
+          type: WEBSOCKET_SEND,
+          payload: {
+            action: 'call',
+            procedure: 'unsubscribeFrom',
+            params: {},
+            data: {
+              script: scriptName,
+            },
+          },
+        },
+        {
+          type: ACTIONS.UNSET_CURRENT_SCRIPT,
+        }
+      ])
+    } else {
+      return dispatch([
+        {
+          type: ACTIONS.UNSET_CURRENT_SCRIPT,
+        }
+      ])
+    }
+  }
+}
+
+export const modifyScriptText = (scriptText) => {
+  return async (dispatch, getState) => {
+    let state = getState()
+    let scriptData = state.script.scriptData
+    if (!scriptData) {
+      return dispatch([])//TODO: error handling, this should never happen
+    }
+
+    let text = scriptData.text
+    return dispatch([
+      {
+        type: ACTIONS.MODIFY_CURRENT_SCRIPT_TEXT,
+        scriptText,
+      }
+    ])
+
+  }
+}
+
+export const commitScriptChanges = () => {
+  return async (dispatch, getState) => {
+    let state = getState()
+    let scriptName = state.script.currentScript
+    let scriptData = state.script.scriptData
+
+    let scriptText = state.script.scriptText
+    if (!scriptText || !scriptData || !scriptName) {
+      return dispatch([])//TODO: error handling, this should never happen
+    }
+
+    return dispatch([
+      {
+        type: WEBSOCKET_SEND,
+        payload: {
+          action: 'call',
+          procedure: 'updateScript',
+          params: {
+            name: scriptName,
+          },
+          data: {
+            name: scriptName, //TODO: should you be able to change it?
+            description: scriptData.description,
+            text: scriptText,
+          },
+        },
+      },
     ])
   }
 }

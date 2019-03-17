@@ -7,7 +7,6 @@ const initialState = {
 }
 
 const sidebar = (state = initialState, action) => {
-  console.log('receiving reducer action: ', action)
   switch (action.type) {
     case WEBSOCKET_OPEN:
       return {

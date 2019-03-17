@@ -23,9 +23,6 @@ const initialState = {
 
 const handleWebsocketMessage = (action, data, state) => {
 
-  console.log('action: ', action)
-  console.log('data: ', data)
-
   switch (action) {
     case 'getTable':
       let schema = data.schema
@@ -76,7 +73,6 @@ const handleWebsocketMessage = (action, data, state) => {
 }
 
 const table = (state = initialState, action) => {
-  console.log('received action: ', action)
 
   let oldData, newData, rowIdx, rowKey, colIdx;
 
