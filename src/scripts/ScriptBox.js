@@ -20,7 +20,7 @@ import 'codemirror/theme/darcula.css'
 
 import { retrieveScript, exitScript, modifyScriptText, commitScriptChanges, ACTION_STATUS } from '../actions'
 
-class Scripts extends Component {
+class ScriptsBox extends Component {
 
   state = {
     statement: '',
@@ -165,4 +165,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Scripts)
+)(ScriptsBox)

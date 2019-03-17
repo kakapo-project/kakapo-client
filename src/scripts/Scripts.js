@@ -12,10 +12,6 @@ import { DEFAULT_TYPE, ALL_TYPES } from '../actions/columns'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import _ from 'lodash'
 
-import 'codemirror/addon/hint/sql-hint'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/darcula.css'
-
 
 import Header from '../Header.js'
 

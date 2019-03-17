@@ -7,6 +7,7 @@ export * from './entityCreator.js'
 export * from './data.js'
 export * from './ws.js'
 export * from './script.js'
+export * from './query.js'
 
 export const ACTIONS = {
   OPEN_SIDEBAR: 'OPEN_SIDEBAR',
@@ -44,6 +45,10 @@ export const ACTIONS = {
   SET_CURRENT_SCRIPT: 'SET_CURRENT_SCRIPT',
   UNSET_CURRENT_SCRIPT: 'UNSET_CURRENT_SCRIPT',
   MODIFY_CURRENT_SCRIPT_TEXT: 'MODIFY_CURRENT_SCRIPT_TEXT',
+
+  SET_CURRENT_QUERY: 'SET_CURRENT_QUERY',
+  UNSET_CURRENT_QUERY: 'UNSET_CURRENT_QUERY',
+  MODIFY_CURRENT_QUERY_STATEMENT: 'MODIFY_CURRENT_QUERY_STATEMENT',
 }
 
 //TODO: this should be in a different file
