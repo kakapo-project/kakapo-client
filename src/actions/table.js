@@ -148,23 +148,36 @@ export const addRow = (idx) => {
 export const deleteRow = (idx) => {
   return async (dispatch, getState) => {
     let state = getState()
+    let tableName = state.table.currentTable
 
     let data = state.table.data
-    let columns = state.table.columns
+    let columns = state.table.columns.values
     let primaryKey = state.table.primaryKey
 
     let primaryKeyIdx = columns.findIndex(x => x === primaryKey)
-    let key = data[idx][primaryKeyIdx]
+    let key = data[idx].values[primaryKeyIdx]
 
-    //TODO: ...
     let removeTableData =  {
       action: 'call',
       procedure: 'removeTableData',
       params: {
-        //name: tableName,
+        name: tableName,
       },
-      data: {},
+      data: {
+        columns: {
+          keys: [primaryKey],
+          values: []
+        },
+        data: [
+          {
+            keys: [key],
+            values: []
+          }
+        ]
+      },
     }
+
+    console.log('removeTableData ####: ', removeTableData)
 
     return dispatch([
       {
@@ -193,23 +206,7 @@ export const modifyValue = (rowIdx, colIdx, value) => {
 
   const updateValue = (tableName, keyRow, newRow) => {
 
-    ///   "columns": {
-    ///     "keys": [ "id" ],
-    ///     "values": [ "message", "category" ]
-    ///   },
-    ///   "data": [
-    ///     {
-    ///       "keys": [ 42 ],
-    ///       "values": [ "hello world", "greeting" ]
-    ///     },
-    ///     {
-    ///       "keys": [ 43 ],
-    ///       "values": [ "goodbye world", "farewell" ]
-    ///     }
-    ///   ]
-    /// }
-
-    let modifyTableData =  {
+    const modifyTableData = {
       action: 'call',
       procedure: 'modifyTableData',
       params: {
@@ -243,14 +240,31 @@ export const modifyValue = (rowIdx, colIdx, value) => {
     ]
   }
 
-  const insertRow = (newRow) => {
+  const insertRow = (tableName, newRow) => {
+    const insertTableData = {
+      action: 'call',
+      procedure: 'insertTableData',
+      params: {
+        name: tableName,
+      },
+      data: {
+        columns: {
+          keys: [],
+          values: Object.keys(newRow)
+        },
+        data: [
+          {
+            keys: [],
+            values: Object.values(newRow)
+          }
+        ]
+      }
+    }
+
     return [
       {
         type: WEBSOCKET_SEND,
-        payload: {
-          action: 'create',
-          data: newRow,
-        },
+        payload: insertTableData
       },
       {
         type: ACTIONS.UPDATE_VALUE,
@@ -285,7 +299,7 @@ export const modifyValue = (rowIdx, colIdx, value) => {
         let type = columnData[columnName].dataType
         newRow[columnName] = encodeByType((idx == colIdx) ? value : row[idx], type)
       })
-      return dispatch(insertRow(newRow))
+      return dispatch(insertRow(tableName, newRow))
     }
     //case 3, a value was modified
     else {

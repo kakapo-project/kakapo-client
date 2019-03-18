@@ -139,7 +139,6 @@ const table = (state = initialState, action) => {
         let { action, data } = json
 
         let stateModification = handleWebsocketMessage(action, data, state)
-        console.log('stateMod for action: ', action, stateModification)
 
         return { ...state, ...stateModification }
 
@@ -148,7 +147,8 @@ const table = (state = initialState, action) => {
     case ACTIONS.ADD_ROW:
       oldData = state.data
       rowIdx = action.idx
-      let emptyRow = Object.keys(state.columnInfo).map(x => null) //just count the number of columns and create row with null values
+      let emptyRowValues = Object.keys(state.columnInfo).map(x => null) //just count the number of columns and create row with null values
+      let emptyRow = { keys: [], values: emptyRowValues }
       newData = [...oldData.slice(0, rowIdx), emptyRow, ...oldData.slice(rowIdx)]
       return { ...state, data: newData }
 
