@@ -30,15 +30,10 @@ import { connect } from 'react-redux'
 import { requestingTableData, addRow, deleteRow, modifyValue, copySelection } from '../actions'
 
 
-/*
-import { DataGrid, ContextMenu, NumberFormatter, DefaultFormatter } from '../data-grid/index.js';
-*/
+import { DataGrid, ContextMenu, NumberFormatter, DefaultFormatter } from '../data-grid/index.js'
 
 class TableData extends Component {
 
-  componentDidMount() {
-    this.props.requestingTableData()
-  }
 
   state = {
     topLeft: {
@@ -74,10 +69,13 @@ class TableData extends Component {
   }
 
   render() {
-    return <div>Nothing</div>
-    /*
     let columnInfo = this.props.columnInfo
-    let columns = ['', ...this.props.columns].map((x, idx) => ({
+    let columnNames = this.props.columns.values || []
+    console.log('this.props.data: ', this.props.data)
+
+    let tableData = this.props.data.map((row) => row.values)
+
+    let columns = ['', ...columnNames].map((x, idx) => ({
       key: idx,
       name: x,
       editable: x => (x[0] !== '' && idx !== 0),
@@ -85,7 +83,8 @@ class TableData extends Component {
       formatter: (columnInfo[x] && columnInfo[x].dataType === 'integer') ? NumberFormatter : DefaultFormatter,
     }))
 
-    let data = [this.props.columns, ...this.props.data].map((x, idx) => [idx || '', ...x])
+    console.log('tableData: ', tableData)
+    let data = [columnNames, ...tableData].map((x, idx) => [idx || '', ...x])
 
     return (
       <DataGrid
@@ -97,10 +96,9 @@ class TableData extends Component {
             {...props}
             clickHandler={(click, row, col, e) => this.contexMenuHandler(click, row, col, e)}
           />}
-        onSelectionComplete={({topLeft, bottomRight}) => this.setState({topLeft, bottomRight})}
+        onSelectionComplete={({ topLeft, bottomRight }) => this.setState({ topLeft, bottomRight })}
       />
     )
-    */
   }
 }
 

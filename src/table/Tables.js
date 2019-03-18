@@ -26,10 +26,11 @@ import ErrorMsg from '../ErrorMsg'
 
 import { connect } from 'react-redux'
 
-import { tableWantsToLoad, loadedPage } from '../actions'
+import { retrieveTable, requestingTableData, exitTable, loadedPage } from '../actions'
 
 import TableData from './TableData'
 import { DataExporter, DataImporter, Api } from './menus'
+import Stator from '../Stator.js'
 
 
 const actions = [
@@ -101,7 +102,7 @@ const TableSidebar = (props) => (
 
     {actions.map((x, idx) => (
       (x === null) ?
-      <Divider idx={idx} />
+      <Divider idx={idx} key={idx} />
       :
       <Modal
         trigger={
@@ -115,6 +116,7 @@ const TableSidebar = (props) => (
         open={props.modalOpen === x.name}
         onClose={() => props.onComplete(null, {})}
         idx={idx}
+        key={idx}
         basic
       >
         {
@@ -137,7 +139,17 @@ class Tables extends Component {
   componentDidMount() {
     const { name } = this.props.match.params
     this.props.loadedPage()
-    this.props.tableWantsToLoad(name)
+
+    setTimeout(() => { //TODO: why?
+      this.props.retrieveTable(name)
+      this.props.requestingTableData()
+    }, 0)
+  }
+
+  componentWillUnmount() {
+    setTimeout(() => { //TODO: why?
+      this.props.exitTable()
+    }, 0)
   }
 
   onFormComplete(action, data) {
@@ -152,15 +164,18 @@ class Tables extends Component {
   }
 
   render() {
+    console.log('isTableLoaded: ', this.props.isTableLoaded)
+
+
     return (
-      <div>
+      <Stator>
         <Header editor />
         {/* <ErrorMsg error={this.props.error} onClose={(type) => this.closeErrorMessage(type)} types={this.errorMsgTypes}/> */}
-        <Sidebar.Pushable className='basic attached' as={Segment} style={{height: 'calc(100vh - 5.15em)', border: 0}}>
+        <Sidebar.Pushable className='basic attached' as={Segment} style={{height: '100vh', border: 0}}>
           <TableSidebar
             visible={ this.props.isSidebarOpen }
             onComplete={ (action, data) => this.onFormComplete(action, data) }
-            openModal={(modal) => this.setState({ modalOpen: modal })}
+            openModal={ (modal) => this.setState({ modalOpen: modal }) }
             modalOpen={ this.state.modalOpen }
           />
 
@@ -199,7 +214,7 @@ class Tables extends Component {
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
-      </div>
+      </Stator>
     );
   }
 }
@@ -213,7 +228,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  tableWantsToLoad: name => dispatch(tableWantsToLoad(name)),
+  retrieveTable: (tableName) => dispatch(retrieveTable(tableName)),
+  requestingTableData: () => dispatch(requestingTableData()),
+  exitTable: () => dispatch(exitTable()),
   loadedPage: () => dispatch(loadedPage()),
 })
 

@@ -68,8 +68,7 @@ const commitTableChanges = async (dispatch, data) => {
   let postData = {
     name: `${data.tableName}`,
     description: '',
-    action: {
-      type: 'create',
+    schema: {
       columns: columns.map(x => (
         {
           name: x.name,
@@ -89,6 +88,7 @@ const commitTableChanges = async (dispatch, data) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': `Bearer ${localStorage.getItem('kakapoJWT')}`,
       },
       body: JSON.stringify(postData),
     })
@@ -164,6 +164,7 @@ const commitQueryChanges = async (dispatch, data) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': `Bearer ${localStorage.getItem('kakapoJWT')}`,
       },
       body: JSON.stringify(postData),
     })

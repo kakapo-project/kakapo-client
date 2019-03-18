@@ -5,6 +5,8 @@ import { ACTIONS } from '../actions'
 
 const initialState = {
   isConnected: false,
+  currentTable: null,
+
   isTableMetaLoaded: false, //TODO: put these in reselect
   isTableDataLoaded: false, //TODO: put these in reselect
   isLoaded: false,
@@ -12,7 +14,7 @@ const initialState = {
 
   columnInfo: {},
 
-  data: [[]],
+  data: [],
   columns: [],
 
   //user actions, to update
@@ -23,8 +25,14 @@ const initialState = {
 
 const handleWebsocketMessage = (action, data, state) => {
 
+  console.log(`action: "${action}"`)
+  console.log('data: ', data)
+
   switch (action) {
     case 'getTable':
+      console.log('reached getTable')
+
+
       let schema = data.schema
       let columnSchema = schema.columns
       let constraint = schema.constraint
@@ -41,6 +49,7 @@ const handleWebsocketMessage = (action, data, state) => {
       for (let x of columnSchema) {
         columnInfo[x.name] = x
       }
+      console.log('reached here')
 
       //done
       return {
@@ -51,7 +60,9 @@ const handleWebsocketMessage = (action, data, state) => {
         isTableMetaLoaded: true,
         isLoaded: state.isTableDataLoaded
       }
-    case 'getTableData':
+    case 'queryTableData':
+      console.log('Got getTableData')
+
       let dataset = data.data
       let columns = data.columns
 
@@ -67,9 +78,19 @@ const handleWebsocketMessage = (action, data, state) => {
     case 'create':
     case 'delete':
 
+    default:
+      return {}
+  }
+}
+
+const handleWebsocketError = (error, state) => {
+  console.log('received error: ', error)
+
+  if (error === 'Already subscribed') {
+    return {}
   }
 
-  return state
+  return {}
 }
 
 const table = (state = initialState, action) => {
@@ -81,7 +102,6 @@ const table = (state = initialState, action) => {
       return {
         ...state,
         isConnected: true,
-        isLoaded: false,
         isTableMetaLoaded: false,
         isTableDataLoaded: false,
       }
@@ -93,13 +113,37 @@ const table = (state = initialState, action) => {
         isTableMetaLoaded: false,
         isTableDataLoaded: false,
       }
+    case ACTIONS.SET_CURRENT_TABLE:
+      return {
+        ...state,
+        currentTable: action.tableName,
+      }
+    case ACTIONS.UNSET_CURRENT_SCRIPT:
+      return {
+        ...state,
+        currentTable: null,
+      }
     case WEBSOCKET_MESSAGE:
       let { data, event } = action.payload
 
       let json = JSON.parse(data)
 
-      let stateModification = handleWebsocketMessage(json.action, json.data, state)
-      return { ...state, ...stateModification }
+      if (json.error) {
+        let { error } = json
+
+        let stateModification = handleWebsocketError(error, state)
+
+        return { ...state, ...stateModification }
+
+      } else {
+        let { action, data } = json
+
+        let stateModification = handleWebsocketMessage(action, data, state)
+        console.log('stateMod for action: ', action, stateModification)
+
+        return { ...state, ...stateModification }
+
+      }
 
     case ACTIONS.ADD_ROW:
       oldData = state.data
@@ -124,10 +168,16 @@ const table = (state = initialState, action) => {
 
       console.log('oldData: ', oldData)
       console.log('rowIdx: ', rowIdx)
-      let oldRow = oldData[rowIdx]
+      let oldRowValues = oldData[rowIdx].values
+      let oldRowKeys = oldData[rowIdx].keys
+
       let value = action.value
 
-      let newRow = [...oldRow.slice(0, colIdx), value, ...oldRow.slice(colIdx + 1)]
+      let newRowValues = [...oldRowValues.slice(0, colIdx), value, ...oldRowValues.slice(colIdx + 1)]
+      let newRow = {
+          keys: oldRowKeys, //TODO: how to do keys
+          values: newRowValues,
+      }
       newData = [...oldData.slice(0, rowIdx), newRow, ...oldData.slice(rowIdx + 1)]
 
       return { ...state, data: newData }

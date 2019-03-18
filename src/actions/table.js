@@ -36,37 +36,86 @@ function clipboardWrite(text, event) {
   cb.onClick(event);
 }
 
-export const tableWantsToLoad = (name) => {
+export const retrieveTable = (tableName) => {
   return async (dispatch, getState) => {
-    const url = `${WS_URL}/table/${name}`
-    return dispatch({
-      type: WEBSOCKET_CONNECT,
-      payload: { url }
-    })
+    return dispatch([
+      {
+        type: WEBSOCKET_SEND,
+        payload: {
+          action: 'call',
+          procedure: 'getTable',
+          params: {
+            name: tableName,
+          },
+          data: {},
+        },
+      },
+      {
+        type: WEBSOCKET_SEND,
+        payload: {
+          action: 'call',
+          procedure: 'subscribeTo',
+          params: {},
+          data: {
+            table: tableName,
+          },
+        },
+      },
+      {
+        type: ACTIONS.SET_CURRENT_TABLE,
+        tableName
+      }
+    ])
+  }
+}
+
+export const exitTable = () => {
+  return async (dispatch, getState) => {
+    let state = getState()
+    let tableName = state.table.currentTable
+    if (tableName) {
+      return dispatch([
+        {
+          type: WEBSOCKET_SEND,
+          payload: {
+            action: 'call',
+            procedure: 'unsubscribeFrom',
+            params: {},
+            data: {
+              table: tableName,
+            },
+          },
+        },
+        {
+          type: ACTIONS.UNSET_CURRENT_TABLE,
+        }
+      ])
+    } else {
+      return dispatch([
+        {
+          type: ACTIONS.UNSET_CURRENT_TABLE,
+        }
+      ])
+    }
   }
 }
 
 export const requestingTableData = () => {
   return async (dispatch, getState) => {
-
-    let sendGetTable = {
-      action: 'getTable',
-    }
-
-    let sendGetTableData = {
-      action: 'getTableData',
-      begin: 0,
-      end: 500,
-    }
+    let state = getState()
+    let tableName = state.table.currentTable
 
     return dispatch([
       {
         type: WEBSOCKET_SEND,
-        payload: sendGetTable,
-      },
-      {
-        type: WEBSOCKET_SEND,
-        payload: sendGetTableData,
+        payload: {
+          action: 'call',
+          procedure: 'queryTableData',
+          params: {
+            name: tableName,
+          },
+          data: {},
+        },
       },
     ])
   }
@@ -107,15 +156,20 @@ export const deleteRow = (idx) => {
     let primaryKeyIdx = columns.findIndex(x => x === primaryKey)
     let key = data[idx][primaryKeyIdx]
 
-    let deletedRow = {
-      action: 'delete',
-      key: key,
+    //TODO: ...
+    let removeTableData =  {
+      action: 'call',
+      procedure: 'removeTableData',
+      params: {
+        //name: tableName,
+      },
+      data: {},
     }
 
     return dispatch([
       {
         type: WEBSOCKET_SEND,
-        payload: deletedRow,
+        payload: removeTableData,
       },
       {
         type: ACTIONS.DELETE_ROW,
@@ -137,15 +191,48 @@ export const modifyValue = (rowIdx, colIdx, value) => {
     }
   }
 
-  const updateValue = (key, newRow) => {
+  const updateValue = (tableName, keyRow, newRow) => {
+
+    ///   "columns": {
+    ///     "keys": [ "id" ],
+    ///     "values": [ "message", "category" ]
+    ///   },
+    ///   "data": [
+    ///     {
+    ///       "keys": [ 42 ],
+    ///       "values": [ "hello world", "greeting" ]
+    ///     },
+    ///     {
+    ///       "keys": [ 43 ],
+    ///       "values": [ "goodbye world", "farewell" ]
+    ///     }
+    ///   ]
+    /// }
+
+    let modifyTableData =  {
+      action: 'call',
+      procedure: 'modifyTableData',
+      params: {
+        name: tableName,
+      },
+      data: {
+        columns: {
+          keys: Object.keys(keyRow),
+          values: Object.keys(newRow)
+        },
+        data: [
+          {
+            keys: Object.values(keyRow),
+            values: Object.values(newRow)
+          }
+        ]
+      }
+    }
+
     return [
       {
         type: WEBSOCKET_SEND,
-        payload: {
-          action: 'update',
-          data: newRow,
-          key: key,
-        },
+        payload: modifyTableData,
       },
       {
         type: ACTIONS.UPDATE_VALUE,
@@ -176,16 +263,16 @@ export const modifyValue = (rowIdx, colIdx, value) => {
 
   return async (dispatch, getState) => {
     let state = getState()
+    let tableName = state.table.currentTable
 
     let data = state.table.data
-    let columns = state.table.columns
+    let columns = state.table.columns.values
     let primaryKey = state.table.primaryKey
     let columnData = state.table.columnInfo
-    console.log('columnData: ', columnData)
 
     let primaryKeyIdx = columns.findIndex(x => x === primaryKey)
     let row = data[rowIdx]
-    let key = row[primaryKeyIdx]
+    let key = row.values[primaryKeyIdx]
 
     //case 1, row is actually new, don't push to database until we have a key
     if (key === null && primaryKeyIdx !== colIdx) {
@@ -202,12 +289,17 @@ export const modifyValue = (rowIdx, colIdx, value) => {
     }
     //case 3, a value was modified
     else {
+      let keyType = columnData[primaryKey].dataType
+      let keyRow = {
+        [primaryKey]: encodeByType(key, keyType),
+      }
+
       let otherColumnName = columns[colIdx]
       let type = columnData[otherColumnName].dataType
       let newRow = {
         [otherColumnName]: encodeByType(value, type),
       }
-      return dispatch(updateValue(key, newRow))
+      return dispatch(updateValue(tableName, keyRow, newRow))
     }
   }
 }

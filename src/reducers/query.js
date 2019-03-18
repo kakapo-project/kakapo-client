@@ -11,10 +11,6 @@ const initialState = {
 }
 
 const handleWebsocketMessage = (action, data, state) => {
-
-  console.log('received action: ', action)
-  console.log('received data: ', data)
-
   switch (action) {
     case 'getQuery':
       return {
@@ -31,8 +27,6 @@ const handleWebsocketMessage = (action, data, state) => {
 }
 
 const handleWebsocketError = (error, state) => {
-  console.log('received error: ', error)
-
   if (error === 'Already subscribed') {
     return {}
   }
