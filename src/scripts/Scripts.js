@@ -105,7 +105,7 @@ class Scripts extends Component {
           `}
         </style>
         <Header editor />
-        <Sidebar.Pushable className='basic attached' as={Segment} style={{height: 'calc(100vh - 5.15em)', border: 0}}>
+        <Sidebar.Pushable className='basic attached' as={Segment} style={{height: '100vh', border: 0}}>
           <ScriptsSidebar sidebarOpen={this.props.isSidebarOpen} />
           <Sidebar.Pusher>
             <ScriptBox name={name} domain={domain} />

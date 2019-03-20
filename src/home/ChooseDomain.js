@@ -15,11 +15,34 @@ import { pullDomains, setEntitySelection, Selections } from '../actions'
 
 class ChooseDomain extends Component {
 
-  state = {
-  }
-
   componentWillMount() {
     this.props.pullDomains()
+  }
+
+  getDomainIcon(domainType) {
+    switch (domainType) {
+      case 'POSTGRES':
+        return 'cube'
+      case 'REDIS':
+        return 'lightning'
+      case 'SIMPLE_RUNNER':
+        return 'terminal'
+      default:
+        return 'exchange'
+    }
+  }
+
+  getDomainColor(domainType) {
+    switch (domainType) {
+      case 'POSTGRES':
+        return 'scheme-green'
+      case 'REDIS':
+        return 'black'
+      case 'SIMPLE_RUNNER':
+        return 'grey'
+      default:
+        return 'black'
+    }
   }
 
   render() {
@@ -37,7 +60,13 @@ class ChooseDomain extends Component {
                   to={`/${domain.name}`}
                 >
                   <Segment textAlign='center' basic>
-                    <Icon circular inverted size='huge' color='black' name='settings' />
+                    <Icon
+                      circular
+                      inverted
+                      size='huge'
+                      color={this.getDomainIcon(domain.type)}
+                      name={this.getDomainColor(domain.type)}
+                    />
                   </Segment>
                   <Card.Content>
                     <Card.Header>{domain.name}</Card.Header>

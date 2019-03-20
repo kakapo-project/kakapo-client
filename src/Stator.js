@@ -17,6 +17,7 @@ class Stator extends Component<Props> {
   componentWillMount() {
     switch (this.props.ws.status) {
       case ACTION_STATUS.NOT_CONNECTED:
+        //TODO: stop all connections before starting?
         this.props.startWebsocketConnection()
         return
       default:

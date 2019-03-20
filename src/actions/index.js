@@ -3,6 +3,7 @@ import { WEBSOCKET_CONNECT, WEBSOCKET_SEND } from '@giantmachines/redux-websocke
 import { WS_URL } from './config.js'
 
 export * from './table.js'
+export * from './redisTable.js'
 export * from './entityCreator.js'
 export * from './data.js'
 export * from './ws.js'
@@ -18,6 +19,11 @@ export const ACTIONS = {
   ADD_ROW: 'ADD_ROW',
   DELETE_ROW: 'DELETE_ROW',
   UPDATE_VALUE: 'UPDATE_VALUE',
+
+  ADD_ROW_REDIS: 'ADD_ROW_REDIS',
+  DELETE_ROW_REDIS: 'DELETE_ROW_REDIS',
+  UPDATE_VALUE_REDIS: 'UPDATE_VALUE_REDIS',
+
 
   PULL_DATA_ERROR: 'PULL_DATA_ERROR',
   CLEAR_PULL_DATA_ERROR: 'CLEAR_PULL_DATA_ERROR',
@@ -52,6 +58,9 @@ export const ACTIONS = {
 
   SET_CURRENT_TABLE: 'SET_CURRENT_TABLE',
   UNSET_CURRENT_TABLE: 'UNSET_CURRENT_TABLE',
+
+  SET_CURRENT_REDIS_TABLE: 'SET_CURRENT_REDIS_TABLE',
+  UNSET_CURRENT_REDIS_TABLE: 'UNSET_CURRENT_REDIS_TABLE',
 }
 
 //TODO: this should be in a different file

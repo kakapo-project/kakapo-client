@@ -177,8 +177,6 @@ export const deleteRow = (idx) => {
       },
     }
 
-    console.log('removeTableData ####: ', removeTableData)
-
     return dispatch([
       {
         type: WEBSOCKET_SEND,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import Tab, { Button, Icon, Image, Menu, Search, Segment, Sidebar } from 'semantic-ui-react'
+import { Button, Card, Container, Dropdown, Grid, Icon, Image, Input, Menu, Modal, Segment, Sidebar, Transition } from 'semantic-ui-react'
+import { Link, Redirect } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 
@@ -10,88 +11,44 @@ import Header from '../Header.js'
 import Entities from '../entities/Entities.js'
 import Stator from '../Stator.js'
 
-import { loadedPage, setEntitySelection, Selections } from '../actions'
+import { pullDomains, setEntitySelection, Selections } from '../actions'
+import PostgresDashboard from './PostgresDashboard.js';
+import RedisDashboard from './RedisDashboard.js';
 
 class DomainDashboard extends Component {
 
-  state = {}
-
-  isEntityActive(selection) {
-    return this.props.selections.includes(selection)
-  }
-
   componentWillMount() {
-    this.props.loadedPage()
+    this.props.pullDomains()
   }
 
   render() {
-    const { domain } = this.props.match.params
-    const { selections } = this.props
+    const domainName = this.props.match.params.domain
+    const domains = this.props.domains.filter(x => x.name === domainName)
 
-    return (
-      <Stator>
-        <Header />
-        <Sidebar.Pushable className='basic attached' as={Segment} style={{height: '100vh', border: 0}}>
-          <Sidebar
-            as={Menu}
-            animation='scale down'
-            icon='labeled'
-            inverted
-            vertical
-            visible={this.props.isSidebarOpen}
-            width='thin'
-            style={{backgroundImage: 'linear-gradient(#1b1c1d, rgb(0, 83, 34)'}}
-          >
-            <Menu.Item
-                as='a'
-                active={this.isEntityActive(Selections.tables)}
-                style={{marginTop: '4vh'}}
-                onClick={e => this.props.setEntitySelection(Selections.tables)}>
-              <Icon name='database' />
-              Tables
-            </Menu.Item>
-            <Menu.Item
-                as='a'
-                active={this.isEntityActive(Selections.views)}
-                onClick={e => this.props.setEntitySelection(Selections.views)}>
-              <Icon name='eye' />
-              Views
-            </Menu.Item>
-            <Menu.Item
-                as='a'
-                active={this.isEntityActive(Selections.queries)}
-                onClick={e => this.props.setEntitySelection(Selections.queries)}>
-              <Icon name='find' />
-              Queries
-            </Menu.Item>
-            <Menu.Item
-                as='a'
-                active={this.isEntityActive(Selections.scripts)}
-                onClick={e => this.props.setEntitySelection(Selections.scripts)}>
-              <Icon name='code' />
-              Scripts
-            </Menu.Item>
-          </Sidebar>
+    if (domains.length === 0) {
+      return <Redirect to='/' />
+    }
 
-          <Sidebar.Pusher>
-            <Entities domain={domain} select={selections} />
-          </Sidebar.Pusher>
-        </Sidebar.Pushable>
-      </Stator>
-    )
+    const domain = domains[0]
+
+    switch (domain.type) {
+      case 'POSTGRES':
+        return <PostgresDashboard domain={domainName} />
+      case 'REDIS':
+        return <RedisDashboard domain={domainName} />
+      default:
+        return <Redirect to='/' />
+    }
   }
 }
 
-
 const mapStateToProps = (state) => ({
-  isSidebarOpen: state.sidebar.isOpen,
-  selections: state.home.selections,
   error: null,
+  domains: state.data.domains,
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  loadedPage: () => dispatch(loadedPage(true)),
-  setEntitySelection: (selection) => dispatch(setEntitySelection(selection)),
+  pullDomains: () => dispatch(pullDomains()),
 })
 
 export default connect(
