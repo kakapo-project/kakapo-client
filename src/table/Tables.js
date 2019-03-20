@@ -137,18 +137,20 @@ class Tables extends Component {
 
 
   componentDidMount() {
-    const { name } = this.props.match.params
+    const { name, domain } = this.props.match.params
     this.props.loadedPage()
 
     setTimeout(() => { //TODO: why?
-      this.props.retrieveTable(name)
-      this.props.requestingTableData()
+      this.props.retrieveTable(domain, name)
+      this.props.requestingTableData(domain)
     }, 0)
   }
 
   componentWillUnmount() {
+    const { domain } = this.props.match.params
+
     setTimeout(() => { //TODO: why?
-      this.props.exitTable()
+      this.props.exitTable(domain)
     }, 0)
   }
 
@@ -165,7 +167,7 @@ class Tables extends Component {
 
   render() {
     console.log('isTableLoaded: ', this.props.isTableLoaded)
-
+    const { name, domain } = this.props.match.params
 
     return (
       <Stator>
@@ -206,7 +208,7 @@ class Tables extends Component {
                   </Label>
                 </Segment>
                 { this.props.isTableConnected ?
-                  <TableData />
+                  <TableData domain={domain}/>
                   :
                   <></>
                 }
@@ -228,9 +230,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  retrieveTable: (tableName) => dispatch(retrieveTable(tableName)),
-  requestingTableData: () => dispatch(requestingTableData()),
-  exitTable: () => dispatch(exitTable()),
+  retrieveTable: (domain, tableName) => dispatch(retrieveTable(domain, tableName)),
+  requestingTableData: (domain) => dispatch(requestingTableData(domain)),
+  exitTable: (domain) => dispatch(exitTable(domain)),
   loadedPage: () => dispatch(loadedPage()),
 })
 

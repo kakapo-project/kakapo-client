@@ -45,7 +45,7 @@ class ScriptsBox extends Component {
     const { name, domain } = this.props
 
     console.log('supposedly sending dispatch')
-    this.props.retrieveScript(name)
+    this.props.retrieveScript(domain, name)
   }
 
   uploadText(value) {
@@ -53,7 +53,8 @@ class ScriptsBox extends Component {
   }
 
   uploadEditorChange = _.debounce(() => {
-    this.props.commitScriptChanges()
+    const domain = this.props.domain
+    this.props.commitScriptChanges(domain)
   }, 500)
 
   runQuery() {
@@ -73,8 +74,10 @@ class ScriptsBox extends Component {
   }
 
   componentWillUnmount() {
+    const { domain } = this.props
+
     setTimeout(() => { //TODO: why?
-      this.props.exitScript()
+      this.props.exitScript(domain)
     }, 0)
   }
 
@@ -156,10 +159,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  retrieveScript: (name) => dispatch(retrieveScript(name)),
-  exitScript: () => dispatch(exitScript()),
+  retrieveScript: (domain, name) => dispatch(retrieveScript(domain, name)),
+  exitScript: (domain) => dispatch(exitScript(domain)),
   modifyScript: (newScriptText) => dispatch(modifyScriptText(newScriptText)),
-  commitScriptChanges: () => dispatch(commitScriptChanges()),
+  commitScriptChanges: (domain) => dispatch(commitScriptChanges(domain)),
 })
 
 export default connect(

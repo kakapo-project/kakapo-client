@@ -42,9 +42,9 @@ export const pullDomains = () => {
   }
 }
 
-const pullTables = async (dispatch, getState) => {
+const pullTables = async (domain, dispatch, getState) => {
   try {
-    let response = await fetch(`${API_URL}/manage/getAllTables`, {
+    let response = await fetch(`${API_URL}/manage/getAllTables?domain=${domain}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -81,9 +81,9 @@ const pullTables = async (dispatch, getState) => {
   }
 }
 
-const pullQueries = async (dispatch, getState) => {
+const pullQueries = async (domain, dispatch, getState) => {
   try {
-    let response = await fetch(`${API_URL}/manage/getAllQueries`, {
+    let response = await fetch(`${API_URL}/manage/getAllQueries?domain=${domain}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -120,9 +120,9 @@ const pullQueries = async (dispatch, getState) => {
   }
 }
 
-const pullScripts = async (dispatch, getState) => {
+const pullScripts = async (domain, dispatch, getState) => {
   try {
-    let response = await fetch(`${API_URL}/manage/getAllScripts`, {
+    let response = await fetch(`${API_URL}/manage/getAllScripts?domain=${domain}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -160,11 +160,11 @@ const pullScripts = async (dispatch, getState) => {
 }
 
 //TODO: rename retrieveData
-export const pullData = () => {
+export const pullData = (domain) => {
   return async (dispatch, getState) => {
-    let pullTablesPromise = pullTables(dispatch, getState)
-    let pullQueriesPromise = pullQueries(dispatch, getState)
-    let pullScriptsPromise = pullScripts(dispatch, getState)
+    let pullTablesPromise = pullTables(domain, dispatch, getState)
+    let pullQueriesPromise = pullQueries(domain, dispatch, getState)
+    let pullScriptsPromise = pullScripts(domain, dispatch, getState)
 
     await pullTablesPromise
     await pullQueriesPromise

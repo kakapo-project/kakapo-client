@@ -23,6 +23,7 @@ class DomainDashboard extends Component {
 
   render() {
     const domainName = this.props.match.params.domain
+    console.log("THE DOMAIN NAME IS: ", domainName)
     const domains = this.props.domains.filter(x => x.name === domainName)
 
     if (domains.length === 0) {

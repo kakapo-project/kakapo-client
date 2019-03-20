@@ -31,7 +31,7 @@ export const closeEntityCreatorErrorMessage = () => {
   }
 }
 
-const commitTableChanges = async (dispatch, data) => {
+const commitTableChanges = async (domain, dispatch, data) => {
 
   const getAllKeys = (obj) => Object.keys(obj).map(x => parseInt(x))
 
@@ -84,7 +84,7 @@ const commitTableChanges = async (dispatch, data) => {
   }
 
   try {
-    let response = await fetch(`${API_URL}/manage/createTable`, {
+    let response = await fetch(`${API_URL}/manage/createTable?domain=${domain}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -113,7 +113,7 @@ const commitTableChanges = async (dispatch, data) => {
   }
 }
 
-const commitScriptChanges = async (dispatch, data) => {
+const commitScriptChanges = async (domain, dispatch, data) => {
   //parse data
   let postData = {
     name: `${data.scriptName}`,
@@ -122,7 +122,7 @@ const commitScriptChanges = async (dispatch, data) => {
   }
 
   try {
-    let response = await fetch(`${API_URL}/manage/createScript`, {
+    let response = await fetch(`${API_URL}/manage/createScript?domain=${domain}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -151,7 +151,7 @@ const commitScriptChanges = async (dispatch, data) => {
   }
 }
 
-const commitQueryChanges = async (dispatch, data) => {
+const commitQueryChanges = async (domain, dispatch, data) => {
   //parse data
   let postData = {
     name: `${data.queryName}`,
@@ -160,7 +160,7 @@ const commitQueryChanges = async (dispatch, data) => {
   }
 
   try {
-    let response = await fetch(`${API_URL}/manage/createQuery`, {
+    let response = await fetch(`${API_URL}/manage/createQuery?domain=${domain}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -189,18 +189,18 @@ const commitQueryChanges = async (dispatch, data) => {
   }
 }
 
-export const commitChanges = () => {
+export const commitChanges = (domain) => {
 
   return async (dispatch, getState) => {
 
     let data = getState().entityCreator
     switch (data.mode) {
       case 'Table':
-        return await commitTableChanges(dispatch, data)
+        return await commitTableChanges(domain, dispatch, data)
       case 'Query':
-        return await commitQueryChanges(dispatch, data)
+        return await commitQueryChanges(domain, dispatch, data)
       case 'Script':
-        return await commitScriptChanges(dispatch, data)
+        return await commitScriptChanges(domain, dispatch, data)
     }
 
   }

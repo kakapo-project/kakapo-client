@@ -11,15 +11,16 @@ import CreateScript from './CreateScript'
 import CreateQuery from './CreateQuery'
 
 
-import { setTableName, commitChanges, exitCreatingEntities, closeEntityCreatorErrorMessage, startCreatingEntities, pullData, setMode } from '../../actions'
+import { setTableName, commitChanges, exitCreatingEntities, closeEntityCreatorErrorMessage, startCreatingEntities, setMode } from '../../actions'
 import { connect } from 'react-redux'
 
 
 class CreateEntities extends Component {
 
   handleCreatedEntities(commitChanges = false) {
+    const domain = this.props.domain
     if (commitChanges) {
-      this.props.commitChanges()
+      this.props.commitChanges(domain)
     } else {
       this.props.exitCreatingEntities()
     }
@@ -95,11 +96,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  commitChanges: () => dispatch(commitChanges()),
+  commitChanges: (domain) => dispatch(commitChanges(domain)),
   exitCreatingEntities: () => dispatch(exitCreatingEntities()),
   closeErrorMessage: () => dispatch(closeEntityCreatorErrorMessage()),
   startCreatingEntities: () => dispatch(startCreatingEntities()),
-  pullData: () => dispatch(pullData()),
 
   setMode: (mode) => dispatch(setMode(mode)),
 })

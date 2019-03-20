@@ -19,13 +19,17 @@ class Entities extends Component {
   }
 
   clearError() {
-    this.props.pullData()
+    const domain = this.props.domain
+
+    this.props.pullData(domain)
     this.props.clearError()
   }
 
 
   componentDidMount() {
-    this.props.pullData()
+    const domain = this.props.domain
+
+    this.props.pullData(domain)
   }
 
   renderIcon(entity) {
@@ -56,19 +60,19 @@ class Entities extends Component {
 
   render() {
     let selectedRenderEntities = this.props.select
-    let domain = this.props.domain
+    const domain = this.props.domain
 
     let entities = this.getEntities()
 
     if (this.props.isDirty) {
-      this.props.pullData()
+      this.props.pullData(domain)
     }
 
     return (
       <Segment basic>
 
         <ErrorMsg error={this.props.error} onClose={() => this.clearError()} types={['Retry']} />
-        <CreateEntities />
+        <CreateEntities domain={domain} />
 
         <Transition.Group as={Grid} animation='scale' duration={400} container doubling columns={4} >
           { entities
@@ -107,7 +111,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  pullData: () => dispatch(pullData()),
+  pullData: (domain) => dispatch(pullData(domain)),
   clearError: () => dispatch(clearPullDataError()),
 })
 

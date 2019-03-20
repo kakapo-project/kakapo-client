@@ -48,11 +48,12 @@ class TableData extends Component {
 
   contexMenuHandler(click, row, col, e) {
     console.log('click: ', click, row, col)
+    const domain = this.props.domain
 
     if (col === null) { // is clicked on row index
       switch (click) {
-        case 'delete': return this.props.deleteRow(row)
-        case 'add': return this.props.addRow(row)
+        case 'delete': return this.props.deleteRow(domain, row)
+        case 'add': return this.props.addRow(domain, row)
         case 'cut': return
         case 'copy': return
         case 'paste': return
@@ -69,9 +70,10 @@ class TableData extends Component {
   }
 
   render() {
+    const domain = this.props.domain
     let columnInfo = this.props.columnInfo
     let columnNames = this.props.columns.values || []
-    console.log('this.props.data: ', this.props.data)
+    console.log('this.props.data: ', this.props)
 
     let tableData = this.props.data.map((row) => row.values)
 
@@ -89,8 +91,9 @@ class TableData extends Component {
     return (
       <DataGrid
         columns={columns}
+        domain={domain}
         data={data}
-        modifyValue={(rowIdx, colIdx, value) => this.props.modifyValue(rowIdx, colIdx, value)}
+        modifyValue={(rowIdx, colIdx, value) => this.props.modifyValue(domain, rowIdx, colIdx, value)}
         contextMenu={(props) =>
           <ContextMenu
             {...props}
@@ -109,10 +112,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  requestingTableData: () => dispatch(requestingTableData()),
-  deleteRow: (idx) => dispatch(deleteRow(idx)),
-  addRow: (idx) => dispatch(addRow(idx)),
-  modifyValue: (rowIdx, colIdx, value) => dispatch(modifyValue(rowIdx, colIdx, value)),
+  requestingTableData: (domain) => dispatch(requestingTableData(domain)),
+  deleteRow: (domain, idx) => dispatch(deleteRow(domain, idx)),
+  addRow: (domain, idx) => dispatch(addRow(domain, idx)),
+  modifyValue: (domain, rowIdx, colIdx, value) => dispatch(modifyValue(domain, rowIdx, colIdx, value)),
   copySelection: ({ topLeft, bottomRight }, e) => dispatch(copySelection(topLeft, bottomRight, e)),
 })
 

@@ -4,7 +4,7 @@ import { WS_URL } from './config.js'
 
 import { ACTIONS } from './index'
 
-export const retrieveQuery = (queryName) => {
+export const retrieveQuery = (domainName, queryName) => {
   return async (dispatch, getState) => {
     return dispatch([
       {
@@ -23,7 +23,9 @@ export const retrieveQuery = (queryName) => {
         payload: {
           action: 'call',
           procedure: 'subscribeTo',
-          params: {},
+          params: {
+            domain: domainName,
+          },
           data: {
             query: queryName,
           },

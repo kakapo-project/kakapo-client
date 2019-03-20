@@ -5,7 +5,7 @@ import { WS_URL } from './config'
 import { ACTIONS } from './index'
 
 
-export const retrieveTable = (tableName) => {
+export const retrieveTable = (domainName, tableName) => {
   return async (dispatch, getState) => {
     return dispatch([
       {
@@ -15,6 +15,7 @@ export const retrieveTable = (tableName) => {
           procedure: 'getTable',
           params: {
             name: tableName,
+            domain: domainName,
           },
           data: {},
         },
@@ -24,7 +25,9 @@ export const retrieveTable = (tableName) => {
         payload: {
           action: 'call',
           procedure: 'subscribeTo',
-          params: {},
+          params: {
+            domain: domainName,
+          },
           data: {
             table: tableName,
           },
@@ -38,7 +41,7 @@ export const retrieveTable = (tableName) => {
   }
 }
 
-export const exitTable = () => {
+export const exitTable = (domainName) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -49,7 +52,9 @@ export const exitTable = () => {
           payload: {
             action: 'call',
             procedure: 'unsubscribeFrom',
-            params: {},
+            params: {
+              domain: domainName
+            },
             data: {
               table: tableName,
             },
@@ -69,7 +74,7 @@ export const exitTable = () => {
   }
 }
 
-export const requestingTableData = () => {
+export const requestingTableData = (domainName) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -82,6 +87,7 @@ export const requestingTableData = () => {
           procedure: 'queryTableData',
           params: {
             name: tableName,
+            domain: domainName,
           },
           data: {},
         },
@@ -90,7 +96,7 @@ export const requestingTableData = () => {
   }
 }
 
-export const addRow = (key, value) => {
+export const addRow = (domainName, key, value) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -100,6 +106,7 @@ export const addRow = (key, value) => {
       procedure: 'insertTableData',
       params: {
         name: tableName,
+        domain: domainName,
       },
       data: {
         [key]: value,
@@ -121,7 +128,7 @@ export const addRow = (key, value) => {
   }
 }
 
-export const deleteRow = (key) => {
+export const deleteRow = (domainName, key) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -131,6 +138,7 @@ export const deleteRow = (key) => {
       procedure: 'removeTableData',
       params: {
         name: tableName,
+        domain: domainName,
       },
       data: [key],
     }
@@ -148,7 +156,7 @@ export const deleteRow = (key) => {
   }
 }
 
-export const modifyValue = (key, value) => {
+export const modifyValue = (domainName, key, value) => {
 
   return async (dispatch, getState) => {
     let state = getState()
@@ -159,6 +167,7 @@ export const modifyValue = (key, value) => {
       procedure: 'modifyTableData',
       params: {
         name: tableName,
+        domain: domainName,
       },
       data: {
         [key]: value,

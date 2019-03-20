@@ -36,7 +36,7 @@ function clipboardWrite(text, event) {
   cb.onClick(event);
 }
 
-export const retrieveTable = (tableName) => {
+export const retrieveTable = (domainName, tableName) => {
   return async (dispatch, getState) => {
     return dispatch([
       {
@@ -46,6 +46,7 @@ export const retrieveTable = (tableName) => {
           procedure: 'getTable',
           params: {
             name: tableName,
+            domain: domainName,
           },
           data: {},
         },
@@ -55,7 +56,9 @@ export const retrieveTable = (tableName) => {
         payload: {
           action: 'call',
           procedure: 'subscribeTo',
-          params: {},
+          params: {
+            domain: domainName,
+          },
           data: {
             table: tableName,
           },
@@ -69,7 +72,7 @@ export const retrieveTable = (tableName) => {
   }
 }
 
-export const exitTable = () => {
+export const exitTable = (domainName) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -83,6 +86,7 @@ export const exitTable = () => {
             params: {},
             data: {
               table: tableName,
+              domain: domainName,
             },
           },
         },
@@ -100,7 +104,7 @@ export const exitTable = () => {
   }
 }
 
-export const requestingTableData = () => {
+export const requestingTableData = (domainName) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -113,6 +117,7 @@ export const requestingTableData = () => {
           procedure: 'queryTableData',
           params: {
             name: tableName,
+            domain: domainName,
           },
           data: {},
         },
@@ -138,14 +143,14 @@ export const copySelection = (topLeft, bottomRight, e) => {
   }
 }
 
-export const addRow = (idx) => {
+export const addRow = (domainName, idx) => {
   return {
     type: ACTIONS.ADD_ROW,
     idx: idx,
   }
 }
 
-export const deleteRow = (idx) => {
+export const deleteRow = (domainName, idx) => {
   return async (dispatch, getState) => {
     let state = getState()
     let tableName = state.table.currentTable
@@ -162,6 +167,7 @@ export const deleteRow = (idx) => {
       procedure: 'removeTableData',
       params: {
         name: tableName,
+        domain: domainName,
       },
       data: {
         columns: {
@@ -191,7 +197,7 @@ export const deleteRow = (idx) => {
   }
 }
 
-export const modifyValue = (rowIdx, colIdx, value) => {
+export const modifyValue = (domainName, rowIdx, colIdx, value) => {
 
   const updateVirtualValue = () => {
     return {
@@ -209,6 +215,7 @@ export const modifyValue = (rowIdx, colIdx, value) => {
       procedure: 'modifyTableData',
       params: {
         name: tableName,
+        domain: domainName,
       },
       data: {
         columns: {
@@ -244,6 +251,7 @@ export const modifyValue = (rowIdx, colIdx, value) => {
       procedure: 'insertTableData',
       params: {
         name: tableName,
+        domain: domainName
       },
       data: {
         columns: {

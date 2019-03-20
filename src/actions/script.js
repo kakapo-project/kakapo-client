@@ -4,7 +4,7 @@ import { WS_URL } from './config.js'
 
 import { ACTIONS } from './index'
 
-export const retrieveScript = (scriptName) => {
+export const retrieveScript = (domainName, scriptName) => {
   return async (dispatch, getState) => {
     return dispatch([
       {
@@ -14,6 +14,7 @@ export const retrieveScript = (scriptName) => {
           procedure: 'getScript',
           params: {
             name: scriptName,
+            domain: domainName,
           },
           data: {},
         },
@@ -23,7 +24,9 @@ export const retrieveScript = (scriptName) => {
         payload: {
           action: 'call',
           procedure: 'subscribeTo',
-          params: {},
+          params: {
+            domain: domainName,
+          },
           data: {
             script: scriptName,
           },
@@ -37,7 +40,7 @@ export const retrieveScript = (scriptName) => {
   }
 }
 
-export const exitScript = () => {
+export const exitScript = (domainName) => {
   return async (dispatch, getState) => {
     let state = getState()
     let scriptName = state.script.currentScript
@@ -51,6 +54,7 @@ export const exitScript = () => {
             params: {},
             data: {
               script: scriptName,
+              domain: domainName,
             },
           },
         },
@@ -86,7 +90,7 @@ export const modifyScriptText = (scriptText) => {
   }
 }
 
-export const commitScriptChanges = () => {
+export const commitScriptChanges = (domainName) => {
   return async (dispatch, getState) => {
     let state = getState()
     let scriptName = state.script.currentScript
@@ -105,6 +109,7 @@ export const commitScriptChanges = () => {
           procedure: 'updateScript',
           params: {
             name: scriptName,
+            domain: domainName,
           },
           data: {
             name: scriptName, //TODO: should you be able to change it?
