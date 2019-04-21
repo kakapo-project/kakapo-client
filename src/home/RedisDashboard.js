@@ -25,7 +25,8 @@ class RedisDashboard extends Component {
   }
 
   render() {
-    const { domain, selections } = this.props
+    const { domain } = this.props
+    const selections = [Selections.tables]
 
     return (
       <Stator>
@@ -39,7 +40,6 @@ class RedisDashboard extends Component {
 
 const mapStateToProps = (state) => ({
   isSidebarOpen: state.sidebar.isOpen,
-  selections: state.home.selections,
   error: null,
 })
 
